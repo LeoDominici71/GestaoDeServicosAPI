@@ -1,13 +1,11 @@
 package com.leonardo.management.entities;
 
-import java.math.BigDecimal;
-
 public class Funcionario {
 
 	private Long id;
 	private String nome;
 	private String designacao;
-	private BigDecimal salario;
+	private Double salario;
 	private String telefone;
 	private String endereco;
 
@@ -15,7 +13,7 @@ public class Funcionario {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Funcionario(Long id, String nome, String designacao, BigDecimal salario, String telefone, String endereco) {
+	public Funcionario(Long id, String nome, String designacao, Double salario, String telefone, String endereco) {
 
 		this.id = id;
 		this.nome = nome;
@@ -49,11 +47,11 @@ public class Funcionario {
 		this.designacao = designacao;
 	}
 
-	public BigDecimal getSalario() {
+	public Double getSalario() {
 		return salario;
 	}
 
-	public void setSalario(BigDecimal salario) {
+	public void setSalario(Double salario) {
 		this.salario = salario;
 	}
 

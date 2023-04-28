@@ -9,14 +9,14 @@ import com.leonardo.management.entities.Funcionario;
 @Service
 public interface FuncionarioService {
 	
-	public List<Funcionario> obterTodosFuncionarios(); 
+	public List<Funcionario> GetFuncionario(); 
 
-    public Funcionario obterFuncionarioPorId(Long id); 
+    public Funcionario GetFuncionarioById(Long id); 
 
-    public void adicionarFuncionario(Funcionario funcionario);
+    public void Post(Funcionario funcionario);
     
-    public void atualizarFuncionario(Funcionario funcionario); 
+    public void Update(Funcionario funcionario); 
 
-    public void removerFuncionario(Long id); 
+    public void Delete(Long id); 
 
 }

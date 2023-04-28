@@ -7,10 +7,11 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.leonardo.management.entities.Funcionario;
+import com.leonardo.management.exception.EmployeeException;
 import com.leonardo.management.service.FuncionarioService;
 
 @Service
-public class FuncionarioServiceImpl implements FuncionarioService{
+public class FuncionarioServiceImpl implements FuncionarioService {
 
 	private final Map<Long, Funcionario> funcionarios;
 
@@ -18,31 +19,34 @@ public class FuncionarioServiceImpl implements FuncionarioService{
 		this.funcionarios = funcionarios;
 	}
 
-	public List<Funcionario> obterTodosFuncionarios() {
+	public List<Funcionario> GetFuncionario() {
 		return new ArrayList<>(funcionarios.values());
 	}
 
-	public Funcionario obterFuncionarioPorId(Long id) {
+	public Funcionario GetFuncionarioById(Long id) {
+		if (!funcionarios.containsKey(id)) {
+			throw new EmployeeException("ID inválido ou já existente.");
+		}
 		return funcionarios.get(id);
 	}
 
-	public void adicionarFuncionario(Funcionario funcionario) {
+	public void Post(Funcionario funcionario) {
 		if (funcionario.getId() == null || funcionarios.containsKey(funcionario.getId())) {
-			throw new IllegalArgumentException("ID inválido ou já existente.");
+			throw new EmployeeException("ID inválido ou já existente.");
 		}
 		funcionarios.put(funcionario.getId(), funcionario);
 	}
 
-	public void atualizarFuncionario(Funcionario funcionario) {
+	public void Update(Funcionario funcionario) {
 		if (funcionario.getId() == null || !funcionarios.containsKey(funcionario.getId())) {
-			throw new IllegalArgumentException("Funcionário não encontrado ou ID inválido.");
+			throw new EmployeeException("Funcionário não encontrado ou ID inválido.");
 		}
 		funcionarios.put(funcionario.getId(), funcionario);
 	}
 
-	public void removerFuncionario(Long id) {
+	public void Delete(Long id) {
 		if (!funcionarios.containsKey(id)) {
-			throw new IllegalArgumentException("Funcionário não encontrado.");
+			throw new EmployeeException("Funcionário não encontrado.");
 		}
 		funcionarios.remove(id);
 	}

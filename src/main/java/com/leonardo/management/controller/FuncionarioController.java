@@ -15,26 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.leonardo.management.entities.Funcionario;
-import com.leonardo.management.service.FuncionarioServicos;
+import com.leonardo.management.service.FuncionarioService;
 @RestController
 @RequestMapping(value = "/funcionarios")
 public class FuncionarioController {
 	
-	 private final FuncionarioServicos funcionarioService;
+	 private final FuncionarioService funcionarioService;
 
-	    public FuncionarioController(FuncionarioServicos funcionarioService) {
+	    public FuncionarioController(FuncionarioService funcionarioService) {
 	        this.funcionarioService = funcionarioService;
 	    }
 
 	    @GetMapping
-	    public ResponseEntity<List<Funcionario>> obterTodosFuncionarios() {
-	        List<Funcionario> funcionarios = funcionarioService.obterTodosFuncionarios();
+	    public ResponseEntity<List<Funcionario>> GetFuncionario() {
+	        List<Funcionario> funcionarios = funcionarioService.GetFuncionario();
 	        return ResponseEntity.ok(funcionarios);
 	    }
 
 	    @GetMapping("/{id}")
-	    public ResponseEntity<Funcionario> obterFuncionarioPorId(@PathVariable Long id) {
-	        Funcionario funcionario = funcionarioService.obterFuncionarioPorId(id);
+	    public ResponseEntity<Funcionario> GetFuncionarioById(@PathVariable Long id) {
+	        Funcionario funcionario = funcionarioService.GetFuncionarioById(id);
 	        if (funcionario == null) {
 	            return ResponseEntity.notFound().build();
 	        }
@@ -42,9 +42,9 @@ public class FuncionarioController {
 	    }
 
 	    @PostMapping
-	    public ResponseEntity<Void> adicionarFuncionario(@RequestBody Funcionario funcionario) {
+	    public ResponseEntity<Void> Post(@RequestBody Funcionario funcionario) {
 	        try {
-	            funcionarioService.adicionarFuncionario(funcionario);
+	            funcionarioService.Post(funcionario);
 	            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 	                    .buildAndExpand(funcionario.getId()).toUri();
 	            return ResponseEntity.created(location).build();
@@ -54,10 +54,10 @@ public class FuncionarioController {
 	    }
 
 	    @PutMapping("/{id}")
-	    public ResponseEntity<Void> atualizarFuncionario(@PathVariable Long id, @RequestBody Funcionario funcionario) {
+	    public ResponseEntity<Void> Update(@PathVariable Long id, @RequestBody Funcionario funcionario) {
 	        try {
 	            funcionario.setId(id);
-	            funcionarioService.atualizarFuncionario(funcionario);
+	            funcionarioService.Update(funcionario);
 	            return ResponseEntity.noContent().build();
 	        } catch (IllegalArgumentException e) {
 	            return ResponseEntity.badRequest().build();
@@ -65,9 +65,9 @@ public class FuncionarioController {
 	    }
 
 	    @DeleteMapping("/{id}")
-	    public ResponseEntity<Void> removerFuncionario(@PathVariable Long id) {
+	    public ResponseEntity<Void> Delete(@PathVariable Long id) {
 	        try {
-	            funcionarioService.removerFuncionario(id);
+	            funcionarioService.Delete(id);
 	            return ResponseEntity.noContent().build();
 	        } catch (IllegalArgumentException e) {
 	            return ResponseEntity.notFound().build();
