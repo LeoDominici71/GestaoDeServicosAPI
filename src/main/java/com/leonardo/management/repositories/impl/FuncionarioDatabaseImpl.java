@@ -6,9 +6,9 @@ import java.util.Map;
 import org.springframework.context.annotation.Bean;
 
 import com.leonardo.management.entities.Funcionario;
-import com.leonardo.management.repositories.MapBancodeDados;
+import com.leonardo.management.repositories.FuncionariosDatabase;
 
-public class MapBancoDeDadosImpl implements MapBancodeDados{
+public class FuncionarioDatabaseImpl implements FuncionariosDatabase{
 	
 	@Bean
     public Map<Long, Funcionario> getFuncionarios() {

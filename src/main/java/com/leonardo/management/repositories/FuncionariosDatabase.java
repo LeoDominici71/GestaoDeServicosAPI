@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.leonardo.management.entities.Funcionario;
 
-public interface MapBancodeDados {
+public interface FuncionariosDatabase {
 	
 	Map<Long, Funcionario> getFuncionarios();
 

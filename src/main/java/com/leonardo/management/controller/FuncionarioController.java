@@ -16,8 +16,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.leonardo.management.entities.Funcionario;
 import com.leonardo.management.service.FuncionarioService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/funcionarios")
+@Api("Funcionarios API")
 public class FuncionarioController {
 	
 	 private final FuncionarioService funcionarioService;
@@ -33,6 +37,7 @@ public class FuncionarioController {
 	    }
 
 	    @GetMapping("/{id}")
+	    @ApiOperation("PEGAR OS DETALHES DOS FUNCIONARIOS POR ID")
 	    public ResponseEntity<Funcionario> getFuncionarioById(@PathVariable Long id) {
 	        Funcionario funcionario = funcionarioService.getFuncionarioById(id);
 	        if (funcionario == null) {
