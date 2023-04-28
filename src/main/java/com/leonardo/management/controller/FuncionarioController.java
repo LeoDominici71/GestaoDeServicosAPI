@@ -27,14 +27,14 @@ public class FuncionarioController {
 	    }
 
 	    @GetMapping
-	    public ResponseEntity<List<Funcionario>> GetFuncionario() {
-	        List<Funcionario> funcionarios = funcionarioService.GetFuncionario();
+	    public ResponseEntity<List<Funcionario>> getFuncionario() {
+	        List<Funcionario> funcionarios = funcionarioService.getFuncionario();
 	        return ResponseEntity.ok(funcionarios);
 	    }
 
 	    @GetMapping("/{id}")
-	    public ResponseEntity<Funcionario> GetFuncionarioById(@PathVariable Long id) {
-	        Funcionario funcionario = funcionarioService.GetFuncionarioById(id);
+	    public ResponseEntity<Funcionario> getFuncionarioById(@PathVariable Long id) {
+	        Funcionario funcionario = funcionarioService.getFuncionarioById(id);
 	        if (funcionario == null) {
 	            return ResponseEntity.notFound().build();
 	        }
@@ -42,9 +42,9 @@ public class FuncionarioController {
 	    }
 
 	    @PostMapping
-	    public ResponseEntity<Void> Post(@RequestBody Funcionario funcionario) {
+	    public ResponseEntity<Void> post(@RequestBody Funcionario funcionario) {
 	        try {
-	            funcionarioService.Post(funcionario);
+	            funcionarioService.postFuncionario(funcionario);
 	            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 	                    .buildAndExpand(funcionario.getId()).toUri();
 	            return ResponseEntity.created(location).build();
@@ -57,7 +57,7 @@ public class FuncionarioController {
 	    public ResponseEntity<Void> Update(@PathVariable Long id, @RequestBody Funcionario funcionario) {
 	        try {
 	            funcionario.setId(id);
-	            funcionarioService.Update(funcionario);
+	            funcionarioService.updateFuncionario(funcionario);
 	            return ResponseEntity.noContent().build();
 	        } catch (IllegalArgumentException e) {
 	            return ResponseEntity.badRequest().build();
@@ -67,7 +67,7 @@ public class FuncionarioController {
 	    @DeleteMapping("/{id}")
 	    public ResponseEntity<Void> Delete(@PathVariable Long id) {
 	        try {
-	            funcionarioService.Delete(id);
+	            funcionarioService.deleteFuncionario(id);
 	            return ResponseEntity.noContent().build();
 	        } catch (IllegalArgumentException e) {
 	            return ResponseEntity.notFound().build();

@@ -6,6 +6,6 @@ import com.leonardo.management.entities.Funcionario;
 
 public interface MapBancodeDados {
 	
-	Map<Long, Funcionario> funcionarios();
+	Map<Long, Funcionario> getFuncionarios();
 
 }

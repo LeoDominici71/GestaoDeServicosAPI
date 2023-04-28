@@ -11,8 +11,10 @@ import com.leonardo.management.repositories.MapBancodeDados;
 public class MapBancoDeDadosImpl implements MapBancodeDados{
 	
 	@Bean
-    public Map<Long, Funcionario> funcionarios() {
+    public Map<Long, Funcionario> getFuncionarios() {
         return new HashMap<>();
     }
+	
+	
 
 }

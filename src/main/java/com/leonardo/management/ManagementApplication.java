@@ -19,38 +19,37 @@ public class ManagementApplication implements CommandLineRunner {
 
 	@Autowired
 	FuncionarioServiceImpl service;
-
+	
 	@Override
 	public void run(String... args) throws Exception {
 
 		System.out.println("========================== Salvando =============================");
-		
-		service.Post(new Funcionario(1L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
-		service.Post(new Funcionario(2L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
-		service.Post(new Funcionario(3L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
-		service.Post(new Funcionario(4L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
-		service.Post(new Funcionario(5L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
+
+		service.postFuncionario(new Funcionario(1L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
+		service.postFuncionario(new Funcionario(2L, "Felipe", "Desenvolvedor", 5200.00, "123456789", "Rua Augusta"));
+		service.postFuncionario(new Funcionario(3L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
+		service.postFuncionario(new Funcionario(4L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
+		service.postFuncionario(new Funcionario(5L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
 		System.out.println();
 		System.out.println("========================== Find All =============================");
-		
-		List<Funcionario> todosFuncionarios = service.GetFuncionario();
-		
+
+		List<Funcionario> todosFuncionarios = service.getFuncionario();
+
 		todosFuncionarios.forEach(System.out::println);
-		
-		System.out.println();
-		System.out.println("========================== Find By Id =============================");
-		
-		System.out.println(service.GetFuncionarioById(1L));
-		System.out.println();
+
 		System.out.println("========================== Update =============================");
-		Funcionario funcionarioAtualizado = service.Update(new Funcionario(1L, "Isadora", "Porteira", 1200.00, "123456789", "Rua Itarare"));
+		Funcionario funcionarioAtualizado = service.getFuncionarioById(1L);
+		funcionarioAtualizado = new Funcionario(1L, "Isadora", "Porteira", 1500.00, "123456789", "Rua Itarare");
+		service.updateFuncionario(funcionarioAtualizado);
+		System.out.println("Funcionário atualizado: " + service.getFuncionarioById(1L));
 		System.out.println();
-		System.out.println();
+		
 		System.out.println("========================== Delete =============================");
-		service.Delete(1L);
-		
-		
-		
+		service.deleteFuncionario(2L);
+		System.out.println("Funcionários restantes:");
+		List<Funcionario> funcionariosRestantes = service.getFuncionario();
+		funcionariosRestantes.forEach(System.out::println);
+
 	}
 
 }

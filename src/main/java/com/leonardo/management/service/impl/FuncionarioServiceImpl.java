@@ -1,54 +1,71 @@
 package com.leonardo.management.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.leonardo.management.entities.Funcionario;
-import com.leonardo.management.exception.EmployeeException;
+import com.leonardo.management.exception.DuplicatedEmployeeException;
+import com.leonardo.management.exception.EmployeeNotFoundException;
 import com.leonardo.management.service.FuncionarioService;
 
 @Service
 public class FuncionarioServiceImpl implements FuncionarioService {
 
-	private final Map<Long, Funcionario> funcionarios;
+	private final Map<Long, Funcionario> funcionarioRepository;
 
-	public FuncionarioServiceImpl(Map<Long, Funcionario> funcionarios) {
-		this.funcionarios = funcionarios;
+	public FuncionarioServiceImpl(Map<Long, Funcionario> funcionarioRepository) {
+		this.funcionarioRepository = funcionarioRepository;
 	}
 
-	public List<Funcionario> GetFuncionario() {
-		return new ArrayList<>(funcionarios.values());
+	public List<Funcionario> getFuncionario() {
+        return funcionarioRepository.values()
+                .stream()
+                .collect(Collectors.toList());
+    }
+
+	public Funcionario getFuncionarioById(Long id) {
+		return funcionarioRepository.entrySet().stream()
+				.filter(entry -> entry.getKey().equals(id))
+				.map(Map.Entry::getValue)
+				.findFirst()
+				.orElseThrow(() -> new EmployeeNotFoundException("Funcionário não encontrado."));
 	}
 
-	public Funcionario GetFuncionarioById(Long id) {
-		if (!funcionarios.containsKey(id)) {
-			throw new EmployeeException("ID inválido ou já existente.");
-		}
-		return funcionarios.get(id);
+
+	public void postFuncionario(Funcionario funcionario) throws DuplicatedEmployeeException {
+	    Optional<Funcionario> existingFuncionario = funcionarioRepository.values().stream()
+	            .filter(f -> f.getId().equals(funcionario.getId()))
+	            .findFirst();
+
+	    if (existingFuncionario.isPresent()) {
+	        throw new DuplicatedEmployeeException("Funcionario já existente.");
+	    } else {
+	        funcionarioRepository.put(funcionario.getId(), funcionario);
+	    }
 	}
 
-	public void Post(Funcionario funcionario) {
-		if (funcionario.getId() == null || funcionarios.containsKey(funcionario.getId())) {
-			throw new EmployeeException("ID inválido ou já existente.");
-		}
-		funcionarios.put(funcionario.getId(), funcionario);
+	public void updateFuncionario(Funcionario funcionario) throws DuplicatedEmployeeException {
+	    Optional<Funcionario> existingFuncionario = funcionarioRepository.values().stream()
+	            .filter(f -> f.getId().equals(funcionario.getId()))
+	            .findFirst();
+
+	    if (existingFuncionario.isPresent()) {
+	        funcionarioRepository.put(funcionario.getId(), funcionario);
+	    } else {
+	        throw new DuplicatedEmployeeException("Funcionário não encontrado ou ID inválido.");
+	    }
 	}
 
-	public void Update(Funcionario funcionario) {
-		if (funcionario.getId() == null || !funcionarios.containsKey(funcionario.getId())) {
-			throw new EmployeeException("Funcionário não encontrado ou ID inválido.");
-		}
-		funcionarios.put(funcionario.getId(), funcionario);
-	}
-
-	public void Delete(Long id) {
-		if (!funcionarios.containsKey(id)) {
-			throw new EmployeeException("Funcionário não encontrado.");
-		}
-		funcionarios.remove(id);
-	}
+	public void deleteFuncionario(Long id) {
+        boolean removed = funcionarioRepository.entrySet()
+                .removeIf(entry -> entry.getKey().equals(id));
+        if (!removed) {
+            throw new EmployeeNotFoundException("Funcionário não encontrado.");
+        }
+    }
 
 }
