@@ -1,19 +1,28 @@
 package com.leonardo.management.entities;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class Funcionario {
 
-	private Long id;
+	@NotNull
+	private Integer id;
+	@NotEmpty
 	private String nome;
+	@NotEmpty
 	private String designacao;
+	@NotNull
 	private Double salario;
+	@NotEmpty
 	private String telefone;
+	@NotEmpty
 	private String endereco;
 
 	public Funcionario() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Funcionario(Long id, String nome, String designacao, Double salario, String telefone, String endereco) {
+	public Funcionario(Integer id, String nome, String designacao, Double salario, String telefone, String endereco) {
 
 		this.id = id;
 		this.nome = nome;
@@ -23,11 +32,11 @@ public class Funcionario {
 		this.endereco = endereco;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

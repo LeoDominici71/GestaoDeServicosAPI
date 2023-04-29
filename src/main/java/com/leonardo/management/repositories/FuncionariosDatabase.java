@@ -6,6 +6,6 @@ import com.leonardo.management.entities.Funcionario;
 
 public interface FuncionariosDatabase {
 	
-	Map<Long, Funcionario> getFuncionarios();
+	Map<Integer, Funcionario> getFuncionarios();
 
 }

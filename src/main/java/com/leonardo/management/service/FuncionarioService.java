@@ -7,16 +7,16 @@ import org.springframework.stereotype.Service;
 import com.leonardo.management.entities.Funcionario;
 
 @Service
-public interface FuncionarioService {
+public interface FuncionarioService{
 	
 	public List<Funcionario> getFuncionario(); 
 
-    public Funcionario getFuncionarioById(Long id); 
+    public Funcionario getFuncionarioById(Integer id); 
 
     public void postFuncionario(Funcionario funcionario);
     
     public void updateFuncionario(Funcionario funcionario); 
 
-    public void deleteFuncionario(Long id); 
+    public void deleteFuncionario(Integer id); 
 
 }

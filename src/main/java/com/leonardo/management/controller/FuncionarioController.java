@@ -1,7 +1,10 @@
 package com.leonardo.management.controller;
 
 import java.net.URI;
+
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,63 +22,64 @@ import com.leonardo.management.service.FuncionarioService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value = "/funcionarios")
 @Api("Funcionarios API")
 public class FuncionarioController {
-	
-	 private final FuncionarioService funcionarioService;
 
-	    public FuncionarioController(FuncionarioService funcionarioService) {
-	        this.funcionarioService = funcionarioService;
-	    }
+	private final FuncionarioService funcionarioService;
 
-	    @GetMapping
-	    public ResponseEntity<List<Funcionario>> getFuncionario() {
-	        List<Funcionario> funcionarios = funcionarioService.getFuncionario();
-	        return ResponseEntity.ok(funcionarios);
-	    }
+	public FuncionarioController(FuncionarioService funcionarioService) {
+		this.funcionarioService = funcionarioService;
+	}
 
-	    @GetMapping("/{id}")
-	    @ApiOperation("PEGAR OS DETALHES DOS FUNCIONARIOS POR ID")
-	    public ResponseEntity<Funcionario> getFuncionarioById(@PathVariable Long id) {
-	        Funcionario funcionario = funcionarioService.getFuncionarioById(id);
-	        if (funcionario == null) {
-	            return ResponseEntity.notFound().build();
-	        }
-	        return ResponseEntity.ok(funcionario);
-	    }
+	@GetMapping
+	@ApiOperation("PEGAR FUNCIONARIOS")
+	public ResponseEntity<List<Funcionario>> getFuncionario() {
+		List<Funcionario> funcionarios = funcionarioService.getFuncionario();
+		return ResponseEntity.ok(funcionarios);
+	}
 
-	    @PostMapping
-	    public ResponseEntity<Void> post(@RequestBody Funcionario funcionario) {
-	        try {
-	            funcionarioService.postFuncionario(funcionario);
-	            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-	                    .buildAndExpand(funcionario.getId()).toUri();
-	            return ResponseEntity.created(location).build();
-	        } catch (IllegalArgumentException e) {
-	            return ResponseEntity.badRequest().build();
-	        }
-	    }
+	@GetMapping("/{id}")
+	@ApiOperation("PEGAR OS DETALHES DOS FUNCIONARIOS POR ID")
+	public ResponseEntity<Funcionario> getFuncionarioById(@PathVariable Integer id) {
+		Funcionario funcionario = funcionarioService.getFuncionarioById(id);
+		if (funcionario == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(funcionario);
+	}
 
-	    @PutMapping("/{id}")
-	    public ResponseEntity<Void> Update(@PathVariable Long id, @RequestBody Funcionario funcionario) {
-	        try {
-	            funcionario.setId(id);
-	            funcionarioService.updateFuncionario(funcionario);
-	            return ResponseEntity.noContent().build();
-	        } catch (IllegalArgumentException e) {
-	            return ResponseEntity.badRequest().build();
-	        }
-	    }
+	@PostMapping
+	@ApiOperation("ADICIONAR NOVO FUNCIONARIO")
+	public ResponseEntity<Void> post(@Valid @RequestBody Funcionario funcionario) {
+			funcionarioService.postFuncionario(funcionario);
+			URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+					.buildAndExpand(funcionario.getId()).toUri();
+			return ResponseEntity.created(location).build();
+	}
 
-	    @DeleteMapping("/{id}")
-	    public ResponseEntity<Void> Delete(@PathVariable Long id) {
-	        try {
-	            funcionarioService.deleteFuncionario(id);
-	            return ResponseEntity.noContent().build();
-	        } catch (IllegalArgumentException e) {
-	            return ResponseEntity.notFound().build();
-	        }
-	    }
+	@PutMapping("/{id}")
+	@ApiOperation("ATUALIZAR FUNCIONARIO")
+	public ResponseEntity<Void> Update(@PathVariable Integer id, @Valid @RequestBody Funcionario funcionario) {
+		try {
+			funcionario.setId(id);
+			funcionarioService.updateFuncionario(funcionario);
+			return ResponseEntity.noContent().build();
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@DeleteMapping("/{id}")
+	@ApiOperation("DELETAR FUNCIONARIO POR ID")
+	public ResponseEntity<Void> Delete(@PathVariable Integer id) {
+		try {
+			funcionarioService.deleteFuncionario(id);
+			return ResponseEntity.noContent().build();
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
 }
