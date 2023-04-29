@@ -54,21 +54,19 @@ public class EmployeeController {
 	@ApiOperation("ADICIONAR NOVO FUNCIONARIO")
 	public ResponseEntity<Void> post(@Valid @RequestBody Employee funcionario) {
 		employeeService.postEmployee(funcionario);
-			URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-					.buildAndExpand(funcionario.getId()).toUri();
-			return ResponseEntity.created(location).build();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(funcionario.getId()).toUri();
+		return ResponseEntity.created(location).build();
 	}
 
 	@PutMapping("/{id}")
 	@ApiOperation("ATUALIZAR FUNCIONARIO")
 	public ResponseEntity<Void> Update(@PathVariable Integer id, @Valid @RequestBody Employee funcionario) {
-		try {
-			funcionario.setId(id);
-			employeeService.updateEmployee(funcionario);
-			return ResponseEntity.noContent().build();
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().build();
-		}
+
+		funcionario.setId(id);
+		employeeService.updateEmployee(funcionario);
+		return ResponseEntity.noContent().build();
+
 	}
 
 	@DeleteMapping("/{id}")
