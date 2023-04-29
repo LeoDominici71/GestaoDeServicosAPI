@@ -1,7 +1,6 @@
 package com.leonardo.management.controller;
 
 import java.net.URI;
-
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,34 +16,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.leonardo.management.entities.Funcionario;
-import com.leonardo.management.service.FuncionarioService;
+import com.leonardo.management.entities.Employee;
+import com.leonardo.management.service.EmployeeService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/funcionarios")
-@Api("Funcionarios API")
-public class FuncionarioController {
+@RequestMapping(value = "/employees")
+@Api("Employees API")
+public class EmployeeController {
 
-	private final FuncionarioService funcionarioService;
+	private final EmployeeService employeeService;
 
-	public FuncionarioController(FuncionarioService funcionarioService) {
-		this.funcionarioService = funcionarioService;
+	public EmployeeController(EmployeeService employeeService) {
+		this.employeeService = employeeService;
 	}
 
 	@GetMapping
 	@ApiOperation("PEGAR FUNCIONARIOS")
-	public ResponseEntity<List<Funcionario>> getFuncionario() {
-		List<Funcionario> funcionarios = funcionarioService.getFuncionario();
+	public ResponseEntity<List<Employee>> getEmployee() {
+		List<Employee> funcionarios = employeeService.getEmployee();
 		return ResponseEntity.ok(funcionarios);
 	}
 
 	@GetMapping("/{id}")
 	@ApiOperation("PEGAR OS DETALHES DOS FUNCIONARIOS POR ID")
-	public ResponseEntity<Funcionario> getFuncionarioById(@PathVariable Integer id) {
-		Funcionario funcionario = funcionarioService.getFuncionarioById(id);
+	public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer id) {
+		Employee funcionario = employeeService.getEmployeeById(id);
 		if (funcionario == null) {
 			return ResponseEntity.notFound().build();
 		}
@@ -53,8 +52,8 @@ public class FuncionarioController {
 
 	@PostMapping
 	@ApiOperation("ADICIONAR NOVO FUNCIONARIO")
-	public ResponseEntity<Void> post(@Valid @RequestBody Funcionario funcionario) {
-			funcionarioService.postFuncionario(funcionario);
+	public ResponseEntity<Void> post(@Valid @RequestBody Employee funcionario) {
+		employeeService.postEmployee(funcionario);
 			URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 					.buildAndExpand(funcionario.getId()).toUri();
 			return ResponseEntity.created(location).build();
@@ -62,10 +61,10 @@ public class FuncionarioController {
 
 	@PutMapping("/{id}")
 	@ApiOperation("ATUALIZAR FUNCIONARIO")
-	public ResponseEntity<Void> Update(@PathVariable Integer id, @Valid @RequestBody Funcionario funcionario) {
+	public ResponseEntity<Void> Update(@PathVariable Integer id, @Valid @RequestBody Employee funcionario) {
 		try {
 			funcionario.setId(id);
-			funcionarioService.updateFuncionario(funcionario);
+			employeeService.updateEmployee(funcionario);
 			return ResponseEntity.noContent().build();
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().build();
@@ -76,7 +75,7 @@ public class FuncionarioController {
 	@ApiOperation("DELETAR FUNCIONARIO POR ID")
 	public ResponseEntity<Void> Delete(@PathVariable Integer id) {
 		try {
-			funcionarioService.deleteFuncionario(id);
+			employeeService.deleteEmployee(id);
 			return ResponseEntity.noContent().build();
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.notFound().build();

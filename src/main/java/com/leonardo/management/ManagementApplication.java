@@ -1,14 +1,11 @@
 package com.leonardo.management;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.leonardo.management.entities.Funcionario;
-import com.leonardo.management.service.impl.FuncionarioServiceImpl;
+import com.leonardo.management.service.impl.EmployeeServiceImpl;
 
 @SpringBootApplication
 public class ManagementApplication implements CommandLineRunner {
@@ -18,7 +15,7 @@ public class ManagementApplication implements CommandLineRunner {
 	}
 
 	@Autowired
-	FuncionarioServiceImpl service;
+	EmployeeServiceImpl service;
 	
 	@Override
 	public void run(String... args) throws Exception {

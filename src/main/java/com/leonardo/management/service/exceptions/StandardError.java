@@ -1,4 +1,4 @@
-package com.leonardo.management.exception;
+package com.leonardo.management.service.exceptions;
 
 import java.io.Serializable;
 import java.time.Instant;
