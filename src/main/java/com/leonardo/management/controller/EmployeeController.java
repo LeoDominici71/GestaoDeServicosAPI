@@ -62,6 +62,8 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ApiOperation("DELETE EMPLOYEE BY ID")
 	public ResponseEntity<Void> Delete(@PathVariable Long id) {
 		employeeService.deleteEmployee(id);
 		return ResponseEntity.noContent().build();
