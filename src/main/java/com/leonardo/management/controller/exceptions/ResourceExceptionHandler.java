@@ -30,7 +30,7 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 
 	}
-	
+
 	@ExceptionHandler(DuplicatedEmployeeException.class)
 	public ResponseEntity<StandardError> duplicatedEmployee(DuplicatedEmployeeException e, HttpServletRequest request) {
 		StandardError err = new StandardError();
@@ -42,31 +42,20 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 
 	}
-	
-	@ExceptionHandler(NullFieldsException.class)
-	public ResponseEntity<StandardError> handleMethodArgumentNotValid(NullFieldsException e, HttpServletRequest request) {
-	    StandardError err = new StandardError();
-	    err.setTimestamp(Instant.now());
-	    err.setStatus(HttpStatus.BAD_REQUEST.value());
-	    err.setError("Null field exception.");
-	    err.setMessage(e.getMessage());
-	    err.setPath(request.getRequestURI());
-	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
-	}
-	
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ValidationError> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
-	    ValidationError err = new ValidationError();
-	    err.setTimestamp(Instant.now());
-	    err.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
-	    err.setError("Validation exception.");
-	    err.setMessage(e.getMessage());
-	    err.setPath(request.getRequestURI());
-	    
-	    for(FieldError f : e.getBindingResult().getFieldErrors()) {
-	    	err.addError(f.getField(), f.getDefaultMessage());
-	    }
-	    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
+	public ResponseEntity<ValidationError> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
+			HttpServletRequest request) {
+		ValidationError err = new ValidationError();
+		err.setTimestamp(Instant.now());
+		err.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
+		err.setError("Validation exception.");
+		err.setMessage(e.getMessage());
+		err.setPath(request.getRequestURI());
+
+		for (FieldError f : e.getBindingResult().getFieldErrors()) {
+			err.addError(f.getField(), f.getDefaultMessage());
+		}
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
 	}
 }
-
