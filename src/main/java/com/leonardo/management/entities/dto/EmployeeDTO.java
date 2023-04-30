@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leonardo.management.entities.Employee;
 
 public class EmployeeDTO implements Serializable {
@@ -16,6 +17,7 @@ public class EmployeeDTO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@JsonIgnore
 	private Long id;
 	@NotBlank
 	private String name;
