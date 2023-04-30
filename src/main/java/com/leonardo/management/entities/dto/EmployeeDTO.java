@@ -25,7 +25,7 @@ public class EmployeeDTO implements Serializable {
 	@Positive
 	@NotNull
 	private Double salary;
-	@Size(max = 9)
+	@Size(min = 9, max = 13)
 	@NotBlank
 	private String phoneNumber;
 	@NotBlank
