@@ -27,7 +27,7 @@ public class EmployeeDTO implements Serializable {
 	private Double salary;
 	@Size(max = 9)
 	@NotBlank
-	private String number;
+	private String phoneNumber;
 	@NotBlank
 	private String address;
 
@@ -41,19 +41,19 @@ public EmployeeDTO(Employee entity) {
 		this.name = entity.getName();
 		this.designation = entity.getDesignation();
 		this.salary = entity.getSalary();
-		this.number = entity.getNumber();
+		this.phoneNumber = entity.getPhoneNumber();
 		this.address = entity.getAddress();
 		
 	}
 
 	public EmployeeDTO(@NotNull Integer id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,
-			@NotEmpty String number, @NotEmpty String adress) {
+			@NotEmpty String phoneNumber, @NotEmpty String adress) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.designation = designation;
 		this.salary = salary;
-		this.number = number;
+		this.phoneNumber = phoneNumber;
 		this.address = adress;
 	}
 
@@ -89,12 +89,12 @@ public EmployeeDTO(Employee entity) {
 		this.salary = salary;
 	}
 
-	public String getNumber() {
-		return number;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
-	public void setNumber(String number) {
-		this.number = number;
+	public void setNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	public String getAddress() {

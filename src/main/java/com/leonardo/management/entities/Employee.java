@@ -17,7 +17,7 @@ public class Employee implements Serializable {
 	private String name;
 	private String designation;
 	private Double salary;
-	private String number;
+	private String phoneNumber;
 	private String address;
 
 	public Employee() {
@@ -25,13 +25,13 @@ public class Employee implements Serializable {
 	}
 
 	public Employee(@NotNull Integer id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,
-			@NotEmpty String number, @NotEmpty String adress) {
+			@NotEmpty String phoneNumber, @NotEmpty String adress) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.designation = designation;
 		this.salary = salary;
-		this.number = number;
+		this.phoneNumber = phoneNumber;
 		this.address = adress;
 	}
 
@@ -67,12 +67,12 @@ public class Employee implements Serializable {
 		this.salary = salary;
 	}
 
-	public String getNumber() {
-		return number;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
-	public void setNumber(String number) {
-		this.number = number;
+	public void setNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	public String getAddress() {
@@ -103,7 +103,7 @@ public class Employee implements Serializable {
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", name=" + name + ", designation=" + designation + ", salary=" + salary
-				+ ", number=" + number + ", adress=" + address + "]";
+				+ ", number=" + phoneNumber + ", adress=" + address + "]";
 	}
 
 }

@@ -63,13 +63,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void deleteEmployee(Integer id) {
-		employeeRepository.getEmployee().keySet().stream().filter(key -> key.equals(id)).findFirst()
-				.orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MESSAGE));
-		employeeRepository.deleteEmployee(id);
+		var employeeExists = getEmployeeById(id);
+		employeeRepository.deleteEmployee(employeeExists.getId());
 	}
 
 	private boolean funcionarioAlreadyExists(EmployeeDTO employee) {
-		return employeeRepository.getEmployee().values().stream().anyMatch(f -> f.getId().equals(employee.getId()));
+	    return employeeRepository.getEmployee().values().stream()
+	            .anyMatch(f ->  f.getPhoneNumber().equals(employee.getPhoneNumber()));
 	}
 
 	private void copyDtoToEntity(EmployeeDTO dto, Employee entity) {
@@ -78,7 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		entity.setName(dto.getName());
 		entity.setDesignation(dto.getDesignation());
 		entity.setSalary(dto.getSalary());
-		entity.setNumber(dto.getNumber());
+		entity.setNumber(dto.getPhoneNumber());
 		entity.setAddress(dto.getAddress());
 	}
 
@@ -88,7 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		entity.setName(dto.getName());
 		entity.setDesignation(dto.getDesignation());
 		entity.setSalary(dto.getSalary());
-		entity.setNumber(dto.getNumber());
+		entity.setNumber(dto.getPhoneNumber());
 		entity.setAddress(dto.getAddress());
 	}
 
