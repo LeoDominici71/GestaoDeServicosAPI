@@ -92,7 +92,7 @@ public EmployeeDTO(Employee entity) {
 		return phoneNumber;
 	}
 
-	public void setNumber(String phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 

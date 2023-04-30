@@ -35,18 +35,22 @@ public class EmployeeController {
 	}
 
 	@GetMapping
+	@ApiOperation("GET EMPLOYEES")
 	public ResponseEntity<List<EmployeeDTO>> getEmployees() {
 		List<EmployeeDTO> employeeDTOs = employeeService.getEmployee();
 		return ResponseEntity.ok(employeeDTOs);
 	}
 
 	@GetMapping("/{id}")
+	@ApiOperation("GET EMPLOYEE DETAILS BY ID")
 	public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
 		EmployeeDTO dto = employeeService.getEmployeeById(id);
 		return ResponseEntity.ok().body(dto);
 	}
 
 	@PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation("CREATE EMPLOYEE")
 	public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
 		EmployeeDTO createdEmployeeDTO = employeeService.postEmployee(employeeDTO);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -55,6 +59,7 @@ public class EmployeeController {
 	}
 
 	@PutMapping("/{id}")
+	@ApiOperation("UPDATE EMPLOYEE BY ID")
 	public ResponseEntity<EmployeeDTO> Update(@PathVariable Long id, @Valid @RequestBody EmployeeDTO employee) {
 		employee = employeeService.updateEmployee(id, employee);
 		return ResponseEntity.ok().body(employee);

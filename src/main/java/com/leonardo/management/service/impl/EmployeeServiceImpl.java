@@ -81,7 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		entity.setName(dto.getName());
 		entity.setDesignation(dto.getDesignation());
 		entity.setSalary(dto.getSalary());
-		entity.setNumber(dto.getPhoneNumber());
+		entity.setPhoneNumber(dto.getPhoneNumber());
 		entity.setAddress(dto.getAddress());
 	}
 
@@ -99,7 +99,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		entity.setName(dto.getName());
 		entity.setDesignation(dto.getDesignation());
 		entity.setSalary(dto.getSalary());
-		entity.setNumber(dto.getPhoneNumber());
+		entity.setPhoneNumber(dto.getPhoneNumber());
 		entity.setAddress(dto.getAddress());
 		
 		emp.add(entity);
