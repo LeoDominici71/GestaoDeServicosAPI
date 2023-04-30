@@ -2,8 +2,11 @@ package com.leonardo.management.entities.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import com.leonardo.management.entities.Employee;
 
 public class EmployeeDTO implements Serializable {
 
@@ -26,6 +29,17 @@ public class EmployeeDTO implements Serializable {
 
 	public EmployeeDTO() {
 		// TODO Auto-generated constructor stub
+	}
+	
+public EmployeeDTO(Employee entity) {
+		
+		this.id = entity.getId();
+		this.name = entity.getName();
+		this.designation = entity.getDesignation();
+		this.salary = entity.getSalary();
+		this.number = entity.getNumber();
+		this.address = entity.getAddress();
+		
 	}
 
 	public EmployeeDTO(@NotNull Integer id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,

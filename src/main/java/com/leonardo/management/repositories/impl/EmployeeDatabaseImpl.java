@@ -2,6 +2,7 @@ package com.leonardo.management.repositories.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
@@ -22,5 +23,19 @@ public class EmployeeDatabaseImpl implements EmployeeDatabase {
 		return employees;
 	}
 
+	@Override
+	public Employee saveEmployee(Employee employee) {
+		return employees.put(employee.getId(), employee);
+		
+	}
+
+	@Override
+	public void updateEmployee(Employee employee) {
+		employees.put(employee.getId(), employee);
+		
+	}
+
+	
+	
 
 }

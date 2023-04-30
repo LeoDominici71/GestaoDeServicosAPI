@@ -43,8 +43,8 @@ public class ResourceExceptionHandler {
 
 	}
 	
-	@ExceptionHandler(NullPointerException.class)
-	public ResponseEntity<StandardError> handleMethodArgumentNotValid(NullPointerException e, HttpServletRequest request) {
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<StandardError> handleMethodArgumentNotValid(IllegalArgumentException e, HttpServletRequest request) {
 	    StandardError err = new StandardError();
 	    err.setTimestamp(Instant.now());
 	    err.setStatus(HttpStatus.BAD_REQUEST.value());

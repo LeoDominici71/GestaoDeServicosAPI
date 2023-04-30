@@ -2,6 +2,7 @@ package com.leonardo.management.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.leonardo.management.entities.Employee;
+import com.leonardo.management.entities.dto.EmployeeDTO;
 import com.leonardo.management.service.EmployeeService;
 
 import io.swagger.annotations.Api;
@@ -34,49 +36,40 @@ public class EmployeeController {
 	}
 
 	@GetMapping
-	@ApiOperation("PEGAR FUNCIONARIOS")
-	public ResponseEntity<List<Employee>> getEmployee() {
-		List<Employee> funcionarios = employeeService.getEmployee();
-		return ResponseEntity.ok(funcionarios);
+	@ApiOperation("GET EMPLOYEES")
+	public ResponseEntity<List<EmployeeDTO>> getEmployees() {
+		List<EmployeeDTO> employeeDTOs = employeeService.getEmployee();
+		return ResponseEntity.ok(employeeDTOs);
 	}
 
 	@GetMapping("/{id}")
-	@ApiOperation("PEGAR OS DETALHES DOS FUNCIONARIOS POR ID")
-	public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer id) {
-		Employee funcionario = employeeService.getEmployeeById(id);
-		if (funcionario == null) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok(funcionario);
+	@ApiOperation("GET EMPLOYEES BY ID")
+	public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Integer id) {
+		EmployeeDTO dto = employeeService.getEmployeeById(id);
+		return ResponseEntity.ok().body(dto);
 	}
 
 	@PostMapping
-	@ApiOperation("ADICIONAR NOVO FUNCIONARIO")
-	public ResponseEntity<Void> post(@Valid @RequestBody Employee funcionario) {
-		employeeService.postEmployee(funcionario);
+	@ApiOperation("CREATE NEW EMPLOYEE")
+	public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+		EmployeeDTO createdEmployeeDTO = employeeService.postEmployee(employeeDTO);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(funcionario.getId()).toUri();
-		return ResponseEntity.created(location).build();
+				.buildAndExpand(createdEmployeeDTO.getId()).toUri();
+		return ResponseEntity.created(location).body(createdEmployeeDTO);
 	}
 
 	@PutMapping("/{id}")
-	@ApiOperation("ATUALIZAR FUNCIONARIO")
-	public ResponseEntity<Void> Update(@PathVariable Integer id, @Valid @RequestBody Employee funcionario) {
-
-		funcionario.setId(id);
-		employeeService.updateEmployee(funcionario);
-		return ResponseEntity.noContent().build();
+	@ApiOperation("UPDATE EMPLOYEE")
+	public ResponseEntity<EmployeeDTO> Update(@PathVariable Integer id, @Valid @RequestBody EmployeeDTO employee) {
+		employee = employeeService.updateEmployee(id, employee);
+		return ResponseEntity.ok().body(employee);
 
 	}
 
 	@DeleteMapping("/{id}")
-	@ApiOperation("DELETAR FUNCIONARIO POR ID")
+	@ApiOperation("DELETE EMPLOYEE BY ID")
 	public ResponseEntity<Void> Delete(@PathVariable Integer id) {
-		try {
-			employeeService.deleteEmployee(id);
-			return ResponseEntity.noContent().build();
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.notFound().build();
-		}
+		employeeService.deleteEmployee(id);
+		return ResponseEntity.noContent().build();
 	}
 }

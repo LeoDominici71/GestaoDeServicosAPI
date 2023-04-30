@@ -5,17 +5,18 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.leonardo.management.entities.Employee;
+import com.leonardo.management.entities.dto.EmployeeDTO;
 
 @Service
 public interface EmployeeService{
 	
-	public List<Employee> getEmployee(); 
+	public List<EmployeeDTO> getEmployee(); 
 
-    public Employee getEmployeeById(Integer id); 
+    public EmployeeDTO getEmployeeById(Integer id); 
 
-    public void postEmployee(Employee employee);
+    public EmployeeDTO postEmployee(EmployeeDTO employee);
     
-    public void updateEmployee(Employee employee); 
+    public EmployeeDTO updateEmployee(Integer id, EmployeeDTO employee); 
 
     public void deleteEmployee(Integer id); 
 
