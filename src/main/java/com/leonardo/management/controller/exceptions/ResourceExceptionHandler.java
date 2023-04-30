@@ -25,7 +25,7 @@ public class ResourceExceptionHandler {
 		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
 		err.setStatus(HttpStatus.NOT_FOUND.value());
-		err.setError("Employee does not exist.");
+		err.setError("Entity not found exception.");
 		err.setMessage(e.getMessage());
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
@@ -37,7 +37,7 @@ public class ResourceExceptionHandler {
 		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
 		err.setStatus(HttpStatus.BAD_REQUEST.value());
-		err.setError("Employee already exist.");
+		err.setError("Duplicated data exception.");
 		err.setMessage(e.getMessage());
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
@@ -49,7 +49,7 @@ public class ResourceExceptionHandler {
 	    StandardError err = new StandardError();
 	    err.setTimestamp(Instant.now());
 	    err.setStatus(HttpStatus.BAD_REQUEST.value());
-	    err.setError("There are null fields");
+	    err.setError("Null field exception.");
 	    err.setMessage(e.getMessage());
 	    err.setPath(request.getRequestURI());
 	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
@@ -62,11 +62,11 @@ public class ResourceExceptionHandler {
 	            .collect(Collectors.toList());
 	    StandardError err = new StandardError();
 	    err.setTimestamp(Instant.now());
-	    err.setStatus(HttpStatus.BAD_REQUEST.value());
-	    err.setError("There are null fields");
+	    err.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
+	    err.setError("Validation exception.");
 	    err.setMessage(errors.toString());
 	    err.setPath(request.getRequestURI());
-	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
 	}
 }
 

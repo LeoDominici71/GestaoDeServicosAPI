@@ -6,24 +6,18 @@ import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 public class Employee implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	@NotNull
+
 	private Integer id;
-	@NotBlank
 	private String name;
-	@NotBlank
 	private String designation;
-	@NotNull
 	private Double salary;
-	@NotBlank
 	private String number;
-	@NotBlank
 	private String address;
 
 	public Employee() {

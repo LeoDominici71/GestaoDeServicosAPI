@@ -22,6 +22,11 @@ public class EmployeeDatabaseImpl implements EmployeeDatabase {
 	public Map<Integer, Employee>  getEmployee() {
 		return employees;
 	}
+	
+	@Override
+	public Employee getEmployeeById(Integer id) {
+	    return getEmployee().get(id);
+	}
 
 	@Override
 	public Employee saveEmployee(Employee employee) {

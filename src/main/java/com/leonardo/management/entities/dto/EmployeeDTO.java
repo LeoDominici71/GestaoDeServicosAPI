@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 import com.leonardo.management.entities.Employee;
 
@@ -20,8 +22,10 @@ public class EmployeeDTO implements Serializable {
 	private String name;
 	@NotBlank
 	private String designation;
+	@Positive
 	@NotNull
 	private Double salary;
+	@Size(max = 9)
 	@NotBlank
 	private String number;
 	@NotBlank

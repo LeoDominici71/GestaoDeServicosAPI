@@ -8,6 +8,8 @@ public interface EmployeeDatabase {
 	
 	Map<Integer, Employee> getEmployee();
 	
+	public Employee getEmployeeById(Integer id);
+	
 	Employee saveEmployee(Employee employee);
 	
 	void updateEmployee(Employee employee);
