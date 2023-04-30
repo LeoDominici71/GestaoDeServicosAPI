@@ -44,7 +44,7 @@ public class EmployeeController {
 
 	@GetMapping("/{id}")
 	@ApiOperation("GET EMPLOYEES BY ID")
-	public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Integer id) {
+	public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
 		EmployeeDTO dto = employeeService.getEmployeeById(id);
 		return ResponseEntity.ok().body(dto);
 	}
@@ -60,7 +60,7 @@ public class EmployeeController {
 
 	@PutMapping("/{id}")
 	@ApiOperation("UPDATE EMPLOYEE")
-	public ResponseEntity<EmployeeDTO> Update(@PathVariable Integer id, @Valid @RequestBody EmployeeDTO employee) {
+	public ResponseEntity<EmployeeDTO> Update(@PathVariable Long id, @Valid @RequestBody EmployeeDTO employee) {
 		employee = employeeService.updateEmployee(id, employee);
 		return ResponseEntity.ok().body(employee);
 
@@ -68,7 +68,7 @@ public class EmployeeController {
 
 	@DeleteMapping("/{id}")
 	@ApiOperation("DELETE EMPLOYEE BY ID")
-	public ResponseEntity<Void> Delete(@PathVariable Integer id) {
+	public ResponseEntity<Void> Delete(@PathVariable Long id) {
 		employeeService.deleteEmployee(id);
 		return ResponseEntity.noContent().build();
 	}

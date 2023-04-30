@@ -4,17 +4,17 @@ import java.util.Map;
 
 import com.leonardo.management.entities.Employee;
 
-public interface EmployeeDatabase {
+public interface EmployeeDatabase{
 	
-	Map<Integer, Employee> getEmployee();
+	Map<Long, Employee> getEmployee();
 	
-	public Employee getEmployeeById(Integer id);
+	public Employee getEmployeeById(Long id);
 	
 	Employee saveEmployee(Employee employee);
 	
 	void updateEmployee(Employee employee);
 
-	void deleteEmployee(Integer id);
+	void deleteEmployee(Long id);
 	
 	
 

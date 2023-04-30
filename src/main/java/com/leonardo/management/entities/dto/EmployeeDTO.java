@@ -16,8 +16,7 @@ public class EmployeeDTO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@NotNull
-	private Integer id;
+	private Long id;
 	@NotBlank
 	private String name;
 	@NotBlank
@@ -46,7 +45,7 @@ public EmployeeDTO(Employee entity) {
 		
 	}
 
-	public EmployeeDTO(@NotNull Integer id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,
+	public EmployeeDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,
 			@NotEmpty String phoneNumber, @NotEmpty String adress) {
 		super();
 		this.id = id;
@@ -57,11 +56,11 @@ public EmployeeDTO(Employee entity) {
 		this.address = adress;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

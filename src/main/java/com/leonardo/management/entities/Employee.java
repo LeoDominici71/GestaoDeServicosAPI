@@ -13,7 +13,7 @@ public class Employee implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer id;
+	private Long id;
 	private String name;
 	private String designation;
 	private Double salary;
@@ -24,7 +24,7 @@ public class Employee implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Employee(@NotNull Integer id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,
+	public Employee(@NotNull Long id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,
 			@NotEmpty String phoneNumber, @NotEmpty String adress) {
 		super();
 		this.id = id;
@@ -35,11 +35,11 @@ public class Employee implements Serializable {
 		this.address = adress;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -12,12 +12,12 @@ public interface EmployeeService{
 	
 	public List<EmployeeDTO> getEmployee(); 
 
-    public EmployeeDTO getEmployeeById(Integer id); 
+    public EmployeeDTO getEmployeeById(Long id); 
 
     public EmployeeDTO postEmployee(EmployeeDTO employee);
     
-    public EmployeeDTO updateEmployee(Integer id, EmployeeDTO employee); 
+    public EmployeeDTO updateEmployee(Long id, EmployeeDTO employee); 
 
-    public void deleteEmployee(Integer id); 
+    public void deleteEmployee(Long id); 
 
 }

@@ -1,5 +1,6 @@
 package com.leonardo.management.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,6 +19,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	private static final String EMPLOYEE_NOT_FOUND_MESSAGE = "Employee not found.";
 	private static final String DUPLICATED_EMPLOYEE_MESSAGE = "Employee already exist.";
+	
+	private List<Employee> emp = new ArrayList<>();
 
 	private final EmployeeDatabase employeeRepository;
 
@@ -30,7 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return employeeRepository.getEmployee().values().stream().map(EmployeeDTO::new).collect(Collectors.toList());
 	}
 
-	public EmployeeDTO getEmployeeById(Integer id) {
+	public EmployeeDTO getEmployeeById(Long id) {
 		return employeeRepository.getEmployee().entrySet().stream().filter(entry -> entry.getKey().equals(id))
 				.map(Map.Entry::getValue).map(EmployeeDTO::new).findFirst()
 				.orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MESSAGE));
@@ -49,7 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmployeeDTO updateEmployee(Integer id, EmployeeDTO employee) throws DuplicatedEmployeeException {
+	public EmployeeDTO updateEmployee(Long id, EmployeeDTO employee) throws DuplicatedEmployeeException {
 		Employee entity = employeeRepository.getEmployee().entrySet().stream()
 				.filter(entry -> entry.getKey().equals(id)).map(Map.Entry::getValue).findFirst()
 				.orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MESSAGE));
@@ -62,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public void deleteEmployee(Integer id) {
+	public void deleteEmployee(Long id) {
 		var employeeExists = getEmployeeById(id);
 		employeeRepository.deleteEmployee(employeeExists.getId());
 	}
@@ -84,12 +87,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	private void copyDtoToEntitySave(EmployeeDTO dto, Employee entity) {
 		// TODO Auto-generated method stub
-		entity.setId(dto.getId());
+		
+		if (emp.isEmpty()) {
+			entity.setId(1L);
+		}else {
+			
+			entity.setId(emp.size()+1L);
+			
+		}
+		
 		entity.setName(dto.getName());
 		entity.setDesignation(dto.getDesignation());
 		entity.setSalary(dto.getSalary());
 		entity.setNumber(dto.getPhoneNumber());
 		entity.setAddress(dto.getAddress());
+		
+		emp.add(entity);
 	}
 
 }

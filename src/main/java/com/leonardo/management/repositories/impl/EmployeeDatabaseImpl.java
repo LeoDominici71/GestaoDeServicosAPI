@@ -12,19 +12,19 @@ import com.leonardo.management.repositories.EmployeeDatabase;
 @Repository
 public class EmployeeDatabaseImpl implements EmployeeDatabase {
 
-	private Map<Integer, Employee> employees;
+	private Map<Long, Employee> employees;
 
 	public EmployeeDatabaseImpl() {
 		this.employees = new HashMap<>();
 	}
 
 	@Override
-	public Map<Integer, Employee>  getEmployee() {
+	public Map<Long, Employee>  getEmployee() {
 		return employees;
 	}
 	
 	@Override
-	public Employee getEmployeeById(Integer id) {
+	public Employee getEmployeeById(Long id) {
 	    return getEmployee().get(id);
 	}
 
@@ -41,7 +41,7 @@ public class EmployeeDatabaseImpl implements EmployeeDatabase {
 	}
 	
 	 @Override
-	    public void deleteEmployee(Integer id) {
+	    public void deleteEmployee(Long id) {
 	        employees.remove(id);
 	    }
 

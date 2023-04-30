@@ -51,9 +51,9 @@ public class EmployeeIntegrationTest {
 	@DisplayName("Should return success when try to get all employees")
 	void shouldReturnSuccessWhenTryToGetAllTeachers() throws Exception {
 		// given
-		Employee employee1 = new Employee(1, "Igor", "Developer", 1200.00, "123456710", "Atkinson road");
+		Employee employee1 = new Employee(1L, "Igor", "Developer", 1200.00, "123456710", "Atkinson road");
 
-		Employee employee2 = new Employee(2, "Laura", "Developer", 1200.00, "123456789", "Atkinson av");
+		Employee employee2 = new Employee(2L, "Laura", "Developer", 1200.00, "123456789", "Atkinson av");
 
 		employeeRepository.saveEmployee(employee1);
 		employeeRepository.saveEmployee(employee2);
@@ -77,7 +77,7 @@ public class EmployeeIntegrationTest {
 	@Test
 	public void findByIdShouldReturnEmployeeWhenIdExists() throws Exception {
 
-		Employee employee1 = new Employee(1, "Igor", "Developer", 1200.00, "123456710", "Atkinson road");
+		Employee employee1 = new Employee(1L, "Igor", "Developer", 1200.00, "123456710", "Atkinson road");
 
 		employeeRepository.saveEmployee(employee1);
 
@@ -111,8 +111,8 @@ public class EmployeeIntegrationTest {
 	@DisplayName("Should return error when try to create a employee with empty name or number null")
 	void shouldReturnErrorWhenTryToCreateTeacherWithEmptyNameOrCpf() throws Exception {
 		// given
-		var employeeEmptyName = new EmployeeDTO(1, "", "Developer", 1200.00, "123456710", "Atkinson road");
-		var employeeEmptyPhoneNumber = new EmployeeDTO(2, "Osvaldo", "Developer", 1200.00, "", "Atkinson road");
+		var employeeEmptyName = new EmployeeDTO(1L, "", "Developer", 1200.00, "123456710", "Atkinson road");
+		var employeeEmptyPhoneNumber = new EmployeeDTO(2L, "Osvaldo", "Developer", 1200.00, "", "Atkinson road");
 
 		// when
 		var employeeEmptyNameRequest = post(EMPLOYEES_PATH).contentType(MediaType.APPLICATION_JSON)
@@ -134,8 +134,8 @@ public class EmployeeIntegrationTest {
 	@DisplayName("Should return error when try to create a employee with phoneNumber already registered")
 	void shouldReturnErrorWhenTryToCreateTeacherWithCpfAlreadyRegistered() throws Exception {
 		// given
-		var employee1 = new Employee(1, "Lucas", "Developer", 1200.00, "123456710", "Atkinson road");
-		var employee2 = new Employee(2, "Osvaldo", "Developer", 1200.00, "123456710", "Atkinson road");
+		var employee1 = new Employee(1L, "Lucas", "Developer", 1200.00, "123456710", "Atkinson road");
+		var employee2 = new Employee(2L, "Osvaldo", "Developer", 1200.00, "123456710", "Atkinson road");
 
 		employeeRepository.saveEmployee(employee1);
 
@@ -153,7 +153,7 @@ public class EmployeeIntegrationTest {
 	@DisplayName("Should return success when try to create a valid employee")
 	void shouldReturnSuccessWhenTryToCreateAValidEmployee() throws Exception {
 		// given
-		var employee1 = new Employee(1, "Lucas", "Developer", 1200.00, "321899241", "Atkinson road");
+		var employee1 = new Employee(1L, "Lucas", "Developer", 1200.00, "321899241", "Atkinson road");
 
 		// when
 		var teacherRequest = post(EMPLOYEES_PATH).contentType(MediaType.APPLICATION_JSON)
@@ -178,7 +178,7 @@ public class EmployeeIntegrationTest {
 	void shouldReturnErrorWhenTryToUpdateNonExistentTeacher() throws Exception {
 		// given
 		Integer nonExistingId = 99;
-		var employee1 = new Employee(1, "Lucas", "Developer", 1200.00, "321899241", "Atkinson road");
+		var employee1 = new Employee(1L, "Lucas", "Developer", 1200.00, "321899241", "Atkinson road");
 
 		// when
 		var employeeRequest = put(EMPLOYEES_PATH + "/{id}", nonExistingId).contentType(MediaType.APPLICATION_JSON)
@@ -193,8 +193,8 @@ public class EmployeeIntegrationTest {
 	@DisplayName("Should return error when try to update teacher with empty name or phone number")
 	void shouldReturnErrorWhenTryToUpdateTeacherWithEmptyNameOrCpf() throws Exception {
 		// given
-		var employee1 = new Employee(1, "", "Developer", 1200.00, "400000000", "Atkinson road");
-		var employee2 = new Employee(2, "Osvaldo", "Developer", 1200.00, "", "Atkinson road");
+		var employee1 = new Employee(1L, "", "Developer", 1200.00, "400000000", "Atkinson road");
+		var employee2 = new Employee(2L, "Osvaldo", "Developer", 1200.00, "", "Atkinson road");
 
 		// when
 		var employeeEmptyNameRequest = put(EMPLOYEES_PATH + "/{id}", employee1.getId())
@@ -218,7 +218,7 @@ public class EmployeeIntegrationTest {
 	@DisplayName("Should return error when try to update employee with invalid phone number")
 	void shouldReturnErrorWhenTryToUpdateTeacherWithInvalidCpf() throws Exception {
 		// given
-		var employee1 = new Employee(1, "Lucas", "Developer", 1200.00, "3899241", "Atkinson road");
+		var employee1 = new Employee(1L, "Lucas", "Developer", 1200.00, "3899241", "Atkinson road");
 		employeeRepository.saveEmployee(employee1);
 
 		// when
@@ -235,11 +235,11 @@ public class EmployeeIntegrationTest {
 	@DisplayName("Should return error when try to update teacher with cpf already registered")
 	void shouldReturnErrorWhenTryToUpdateTeacherWithCpfAlreadyRegistered() throws Exception {
 		// given
-		var employee1 = new Employee(1, "Lucas", "Developer", 1200.00, "3899241", "Atkinson road");
+		var employee1 = new Employee(1L, "Lucas", "Developer", 1200.00, "3899241", "Atkinson road");
 
 		employeeRepository.saveEmployee(employee1);
 
-		var employee2 = new Employee(2, "Carlos", "Developer", 1200.00, "3899241", "Atkinson road");
+		var employee2 = new Employee(2L, "Carlos", "Developer", 1200.00, "3899241", "Atkinson road");
 
 		// when
 		var employeePhoneNumberAlreadyRegisteredRequest = put(EMPLOYEES_PATH + "/{id}", employee2.getId())
@@ -255,7 +255,7 @@ public class EmployeeIntegrationTest {
 	@DisplayName("Should return success when try to update a valid employee")
 	void shouldReturnSuccessWhenTryToUpdateAValidTeacher() throws Exception {
 		// given
-		var employee1 = new Employee(1, "Lucas", "Developer", 1200.00, "389924199", "Atkinson road");
+		var employee1 = new Employee(1L, "Lucas", "Developer", 1200.00, "389924199", "Atkinson road");
 		employeeRepository.saveEmployee(employee1);
 
 		// when
@@ -289,7 +289,7 @@ public class EmployeeIntegrationTest {
 	    @DisplayName("Should return no-content when try to delete a existent employee")
 	    void shouldReturnNoContentWhenTryToDeleteAExistentTeacher() throws Exception {
 	        // given
-	    	var employee1 = new Employee(1, "Lucas", "Developer", 1200.00, "389924165", "Atkinson road");
+	    	var employee1 = new Employee(1L, "Lucas", "Developer", 1200.00, "389924165", "Atkinson road");
 	    	employeeRepository.saveEmployee(employee1);
 
 	        // when
