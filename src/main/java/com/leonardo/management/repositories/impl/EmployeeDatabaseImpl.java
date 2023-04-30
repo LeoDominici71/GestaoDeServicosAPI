@@ -34,6 +34,11 @@ public class EmployeeDatabaseImpl implements EmployeeDatabase {
 		employees.put(employee.getId(), employee);
 		
 	}
+	
+	 @Override
+	    public void deleteEmployee(Integer id) {
+	        employees.remove(id);
+	    }
 
 	
 	

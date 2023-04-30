@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.leonardo.management.service.exceptions.DuplicatedEmployeeException;
 import com.leonardo.management.service.exceptions.EmployeeNotFoundException;
+import com.leonardo.management.service.exceptions.NullFieldsException;
 import com.leonardo.management.service.exceptions.StandardError;
 
 @ControllerAdvice
@@ -43,8 +44,8 @@ public class ResourceExceptionHandler {
 
 	}
 	
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<StandardError> handleMethodArgumentNotValid(IllegalArgumentException e, HttpServletRequest request) {
+	@ExceptionHandler(NullFieldsException.class)
+	public ResponseEntity<StandardError> handleMethodArgumentNotValid(NullFieldsException e, HttpServletRequest request) {
 	    StandardError err = new StandardError();
 	    err.setTimestamp(Instant.now());
 	    err.setStatus(HttpStatus.BAD_REQUEST.value());

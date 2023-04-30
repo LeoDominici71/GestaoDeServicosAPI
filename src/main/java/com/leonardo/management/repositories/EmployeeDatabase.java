@@ -12,4 +12,8 @@ public interface EmployeeDatabase {
 	
 	void updateEmployee(Employee employee);
 
+	void deleteEmployee(Integer id);
+	
+	
+
 }

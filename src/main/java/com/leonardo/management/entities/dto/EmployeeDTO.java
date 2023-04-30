@@ -16,15 +16,15 @@ public class EmployeeDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@NotNull
 	private Integer id;
-	@NotEmpty
+	@NotBlank
 	private String name;
-	@NotEmpty
+	@NotBlank
 	private String designation;
 	@NotNull
 	private Double salary;
-	@NotEmpty
+	@NotBlank
 	private String number;
-	@NotEmpty
+	@NotBlank
 	private String address;
 
 	public EmployeeDTO() {

@@ -12,7 +12,7 @@ import com.leonardo.management.repositories.EmployeeDatabase;
 import com.leonardo.management.service.EmployeeService;
 import com.leonardo.management.service.exceptions.DuplicatedEmployeeException;
 import com.leonardo.management.service.exceptions.EmployeeNotFoundException;
-import com.leonardo.management.service.exceptions.NullPointerExceptions;
+import com.leonardo.management.service.exceptions.NullFieldsException;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -48,13 +48,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 				throw new DuplicatedEmployeeException(DUPLICATED_EMPLOYEE_MESSAGE);
 			}
 
-			Employee employee = new Employee(employeeDTO.getId(), employeeDTO.getName(), employeeDTO.getDesignation(),
-					employeeDTO.getSalary(), employeeDTO.getNumber(), employeeDTO.getAddress());
+			Employee employee = new Employee();
+			copyDtoToEntitySave(employeeDTO, employee);
 			employeeRepository.saveEmployee(employee);
-			EmployeeDTO savedEmployeeDTO = copyEntityToDTO(employee);
-			return savedEmployeeDTO;
+			return new EmployeeDTO(employee);
 		} catch (NullPointerException e) {
-			throw new NullPointerExceptions(NULL_FIELD_MESSAGE);
+			throw new NullFieldsException(NULL_FIELD_MESSAGE);
 		}
 	}
 
@@ -72,7 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			return new EmployeeDTO(entity);
 
 		} catch (NullPointerException e) {
-			throw new NullPointerExceptions(NULL_FIELD_MESSAGE);
+			throw new NullFieldsException(NULL_FIELD_MESSAGE);
 		}
 	}
 
@@ -80,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public void deleteEmployee(Integer id) {
 		employeeRepository.getEmployee().keySet().stream().filter(key -> key.equals(id)).findFirst()
 				.orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MESSAGE));
-		employeeRepository.getEmployee().remove(id);
+		employeeRepository.deleteEmployee(id);
 	}
 
 	private boolean funcionarioAlreadyExists(EmployeeDTO employee) {
@@ -97,10 +96,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 		dto.setAddress(entity.getAddress());
 		return dto;
 	}
-	
+
 	private void copyDtoToEntity(EmployeeDTO dto, Employee entity) {
 		// TODO Auto-generated method stub
 
+		entity.setName(dto.getName());
+		entity.setDesignation(dto.getDesignation());
+		entity.setSalary(dto.getSalary());
+		entity.setNumber(dto.getNumber());
+		entity.setAddress(dto.getAddress());
+	}
+	
+	private void copyDtoToEntitySave(EmployeeDTO dto, Employee entity) {
+		// TODO Auto-generated method stub
+		entity.setId(dto.getId());
 		entity.setName(dto.getName());
 		entity.setDesignation(dto.getDesignation());
 		entity.setSalary(dto.getSalary());
