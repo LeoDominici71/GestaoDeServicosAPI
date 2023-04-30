@@ -1,13 +1,12 @@
 package com.leonardo.management.controller.exceptions;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -56,16 +55,17 @@ public class ResourceExceptionHandler {
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<StandardError> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
-	    List<String> errors = e.getBindingResult().getAllErrors().stream()
-	            .map(error -> error.getDefaultMessage())
-	            .collect(Collectors.toList());
-	    StandardError err = new StandardError();
+	public ResponseEntity<ValidationError> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
+	    ValidationError err = new ValidationError();
 	    err.setTimestamp(Instant.now());
 	    err.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
 	    err.setError("Validation exception.");
-	    err.setMessage(errors.toString());
+	    err.setMessage(e.getMessage());
 	    err.setPath(request.getRequestURI());
+	    
+	    for(FieldError f : e.getBindingResult().getFieldErrors()) {
+	    	err.addError(f.getField(), f.getDefaultMessage());
+	    }
 	    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
 	}
 }
