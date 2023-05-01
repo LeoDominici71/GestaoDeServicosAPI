@@ -1,0 +1,236 @@
+@SpringBootTest
+@AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class EmployeeControllerIntegrationTest {
+
+	private static final String EMPLOYEES_PATH = "/employees";
+
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Autowired
+	EmployeeDatabase employeeRepository;
+
+	@Autowired
+	ObjectMapper objectMapper;
+	
+	private long nonExistingId;
+	private Employee employee;
+	private Employee newEmployee;
+	private EmployeeDTO employeeDTO;
+	private EmployeeDTO newEmployeeDTO;
+	private EmployeeDTO employeeDtoWithBlankName;
+	private EmployeeDTO employeeDtoWithBlankPhoneNumber;
+	private EmployeeDTO employeeSamePhoneNumberDTO;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		nonExistingId = 123L;
+		employee = EmployeesFactory.createEmployee();
+		newEmployee = EmployeesFactory.createNewEmployee();
+		employeeDTO = EmployeesFactory.createEmployeeDTO();
+		newEmployeeDTO = EmployeesFactory.createNewEmployeeDTO();
+		employeeDtoWithBlankName = EmployeesFactory.createEmployeeDtoWithBlankName();
+		employeeDtoWithBlankPhoneNumber = EmployeesFactory.createEmployeeDtoWithBlankPhoneNumber();
+		employeeSamePhoneNumberDTO = EmployeesFactory.createEmployeeSamePhoneNumber();
+	}
+	/*
+	 * //GET Employee // 
+	 * 1 - Success when try to get all employee
+	 */
+
+	@Test
+	@DisplayName("Should return success when try to get all employees")
+	void shouldReturnSuccessWhenTryToGetAllEmployees() throws Exception {
+		// given
+		employeeRepository.saveEmployee(employee);
+		employeeRepository.saveEmployee(newEmployee);
+
+		// when
+		var employeeRequest = get(EMPLOYEES_PATH);
+
+		// then
+		mockMvc.perform(employeeRequest).andExpect(status().isOk()).andExpect(jsonPath("$[0].name").value("Igor"))
+				.andExpect(jsonPath("$[0].phoneNumber").value("13123456789"))
+				.andExpect(jsonPath("$[1].name").value("Laura"))
+				.andExpect(jsonPath("$[1].phoneNumber").value("11123456789"));
+	}
+
+	/*
+	 * GET Employee BY ID 
+	 * 1 - Success when try to get existent employee 
+	 * 2 - Error when try to get non-existent employee
+	 * 
+	 */
+
+	@Test
+	public void findByIdShouldReturnEmployeeWhenIdExists() throws Exception {
+
+		// given
+		employeeRepository.saveEmployee(employee);
+
+		ResultActions result = mockMvc
+				.perform(get("/employees/{id}", employee.getId()).accept(MediaType.APPLICATION_JSON));
+		result.andExpect(status().isOk());
+		result.andExpect(jsonPath("$.id").value(employee.getId()));
+		result.andExpect(jsonPath("$.name").value(employee.getName()));
+		result.andExpect(jsonPath("$.phoneNumber").value(employee.getPhoneNumber()));
+
+	}
+
+	@Test
+	public void findByIdShouldReturnEntityNotFoundExceptionsWhenIdExists() throws Exception {
+
+		ResultActions result = mockMvc
+				.perform(get("/employees/{id}", nonExistingId).accept(MediaType.APPLICATION_JSON));
+		result.andExpect(status().isNotFound());
+
+	}
+
+	/*
+	 * CREATE Employee 
+	 * 1 - Error when try to create employee with empty name or phoneNumber 
+	 * 2 - Error when try to create employee with phoneNumber already registered 
+	 * 3 - Success when try to create a valid employee
+	 */
+
+	@Test
+	@DisplayName("Should return error when try to create a employee with empty name or number null")
+	void shouldReturnErrorWhenTryToCreateEmployeeWithEmptyNameOrCpf() throws Exception {
+
+		// when
+		var employeeEmptyNameRequest = post(EMPLOYEES_PATH).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(employeeDtoWithBlankName));
+
+		var employeeEmptyPhoneNumberRequest = post(EMPLOYEES_PATH).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(employeeDtoWithBlankPhoneNumber));
+
+		// then
+		mockMvc.perform(employeeEmptyNameRequest).andExpect(status().isUnprocessableEntity())
+				.andExpect(jsonPath("$.status").value("422"))
+				.andExpect(jsonPath("$.error").value("Validation exception."));
+		mockMvc.perform(employeeEmptyPhoneNumberRequest).andExpect(status().isUnprocessableEntity())
+				.andExpect(jsonPath("$.status").value("422"))
+				.andExpect(jsonPath("$.error").value("Validation exception."));
+	}
+
+	@Test
+	@DisplayName("Should return error when try to create a employee with phoneNumber already registered")
+	void shouldReturnErrorWhenTryToCreateEmployeeWithPhoneNumberAlreadyRegistered() throws Exception {
+
+		employeeRepository.saveEmployee(employee);
+
+		// when
+		var employeePhoneNumberAlreadyRegisteredRequest = post(EMPLOYEES_PATH).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(employeeSamePhoneNumberDTO));
+
+		// then
+		mockMvc.perform(employeePhoneNumberAlreadyRegisteredRequest).andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.status").value("400"))
+				.andExpect(jsonPath("$.error").value("Duplicated data exception."));
+	}
+
+	@Test
+	@DisplayName("Should return success when try to create a valid employee")
+	void shouldReturnSuccessWhenTryToCreateAValidEmployee() throws Exception {
+
+		// when
+		var employeeRequest = post(EMPLOYEES_PATH).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(employeeDTO));
+
+		// then
+		mockMvc.perform(employeeRequest).andExpect(status().isCreated())
+				.andExpect(jsonPath("$.name").value(employeeDTO.getName()))
+				.andExpect(jsonPath("$.phoneNumber").value(employeeDTO.getPhoneNumber()));
+	}
+
+	/*
+	 * UPDATE EMPLOYEE 
+	 * 1 - Error when try to update non-existent employee 
+	 * 2 - Error when try to update employee with empty name or phone number  
+	 * 3 - Ok when try to update a valid employee
+	 */
+
+	@Test
+	@DisplayName("Should return error when try to update non-existent employee")
+	void shouldReturnErrorWhenTryToUpdateNonExistentEmployee() throws Exception {
+
+		// when
+		var employeeRequest = put(EMPLOYEES_PATH + "/{id}", nonExistingId).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(employeeDTO));
+
+		// then
+		mockMvc.perform(employeeRequest).andExpect(status().isNotFound()).andExpect(jsonPath("$.status").value("404"))
+				.andExpect(jsonPath("$.error").value("Entity not found exception."));
+	}
+
+	@Test
+	@DisplayName("Should return error when try to update employee with empty name or phone number")
+	void shouldReturnErrorWhenTryToUpdateEmployeeWithEmptyNameOrCpf() throws Exception {
+		
+		// when
+		var employeeEmptyNameRequest = put(EMPLOYEES_PATH + "/{id}", employeeDtoWithBlankName.getId())
+				.contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(employeeDtoWithBlankName));
+
+		var employeeEmptyNumberRequest = put(EMPLOYEES_PATH + "/{id}", employeeDtoWithBlankPhoneNumber.getId())
+				.contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(employeeDtoWithBlankPhoneNumber));
+
+		// then
+		mockMvc.perform(employeeEmptyNameRequest).andExpect(status().isUnprocessableEntity())
+				.andExpect(jsonPath("$.status").value("422"))
+				.andExpect(jsonPath("$.error").value("Validation exception."));
+
+		mockMvc.perform(employeeEmptyNumberRequest).andExpect(status().isUnprocessableEntity())
+				.andExpect(jsonPath("$.status").value("422"))
+				.andExpect(jsonPath("$.error").value("Validation exception."));
+
+	}
+
+	
+	@Test
+	@DisplayName("Should return success when try to update a valid employee")
+	void shouldReturnSuccessWhenTryToUpdateAValidEmployee() throws Exception {
+		
+		employeeRepository.saveEmployee(employee);
+
+		// when
+		var employeeRequest = put(EMPLOYEES_PATH + "/{id}", employee.getId()).contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(employee));
+
+		// then
+		mockMvc.perform(employeeRequest).andExpect(status().isOk())
+				.andExpect(jsonPath("$.name").value(employee.getName()))
+				.andExpect(jsonPath("$.phoneNumber").value(employee.getPhoneNumber()));
+	}
+
+	/*
+	 * DELETE EMPLOYEE 
+	 * 1 - Error when try to delete non-existent employee 
+	 * 2 - No-Content when try to delete existent employee
+	 */
+
+	@Test
+	@DisplayName("Should return error when try to delete non-existent employee")
+	void shouldReturnErrorWhenTryToDeleteNonExistentEmployee() throws Exception {
+		// when
+		var employeeRequest = delete(EMPLOYEES_PATH + "/{id}", nonExistingId);
+
+		// then
+		mockMvc.perform(employeeRequest).andExpect(status().isNotFound()).andExpect(jsonPath("$.status").value("404"))
+				.andExpect(jsonPath("$.error").value("Entity not found exception."));
+	}
+
+	@Test
+	@DisplayName("Should return no-content when try to delete a existent employee")
+	void shouldReturnNoContentWhenTryToDeleteAnExistentEmployee() throws Exception {
+		// given
+		employeeRepository.saveEmployee(employee);
+
+		// when
+		var employeeRequest = delete(EMPLOYEES_PATH + "/{id}", employee.getId());
+
+		// then
+		mockMvc.perform(employeeRequest).andExpect(status().isNoContent());
+	}
+
+}

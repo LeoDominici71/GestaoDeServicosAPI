@@ -41,15 +41,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public EmployeeDTO postEmployee(EmployeeDTO employeeDTO) {
-		if (employeeAlreadyExists(employeeDTO)) {
-			throw new DuplicatedEmployeeException(DUPLICATED_EMPLOYEE_MESSAGE);
-		}
+	    employeeRepository.getEmployee().values().stream()
+	            .filter(f -> f.getPhoneNumber().equals(employeeDTO.getPhoneNumber()))
+	            .findFirst()
+	            .ifPresent(f -> {
+	                throw new DuplicatedEmployeeException(DUPLICATED_EMPLOYEE_MESSAGE);
+	            });
 
-		Employee employee = new Employee();
-		copyDtoToEntityForSave(employeeDTO, employee);
-		employeeRepository.saveEmployee(employee);
-		return new EmployeeDTO(employee);
+	    Employee employee = createAndSaveEmployeeFromDTO(employeeDTO);
+	    return new EmployeeDTO(employee);
 	}
+
+	
 
 	@Override
 	public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
@@ -70,11 +73,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 		var employeeExists = getEmployeeById(id);
 		employeeRepository.deleteEmployee(employeeExists.getId());
 	}
-
-	private boolean employeeAlreadyExists(EmployeeDTO employee) {
-		return employeeRepository.getEmployee().values().stream()
-				.anyMatch(f -> f.getPhoneNumber().equals(employee.getPhoneNumber()));
+	
+	private Employee createAndSaveEmployeeFromDTO(EmployeeDTO dto) {
+	    Employee employee = new Employee();
+	    copyDtoToEntityForSave(dto, employee);
+	    employeeRepository.saveEmployee(employee);
+	    return employee;
 	}
+
 
 	private void copyDtoToEntity(EmployeeDTO dto, Employee entity) {
 

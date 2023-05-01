@@ -1,19 +1,43 @@
-public class Employee implements Serializable {
+public class EmployeeDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(hidden = true)
 	private Long id;
+
+	@NotBlank
 	private String name;
+
+	@NotBlank
 	private String designation;
+
+	@Positive
+	@NotNull
 	private Double salary;
+
+	@Size(min = 9, max = 13)
+	@NotBlank
 	private String phoneNumber;
+
+	@NotBlank
 	private String address;
 
-	public Employee() {
+	public EmployeeDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Employee(@NotNull Long id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,
+	public EmployeeDTO(Employee entity) {
+
+		this.id = entity.getId();
+		this.name = entity.getName();
+		this.designation = entity.getDesignation();
+		this.salary = entity.getSalary();
+		this.phoneNumber = entity.getPhoneNumber();
+		this.address = entity.getAddress();
+
+	}
+
+	public EmployeeDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,
 			@NotEmpty String phoneNumber, @NotEmpty String adress) {
 		super();
 		this.id = id;
@@ -71,28 +95,4 @@ public class Employee implements Serializable {
 	public void setAddress(String adress) {
 		this.address = adress;
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Employee other = (Employee) obj;
-		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		return "Employee [id=" + id + ", name=" + name + ", designation=" + designation + ", salary=" + salary
-				+ ", number=" + phoneNumber + ", adress=" + address + "]";
-	}
-
 }

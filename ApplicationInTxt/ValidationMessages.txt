@@ -1,0 +1,5 @@
+javax.validation.constraints.NotNull.message=This field cannot be null
+javax.validation.constraints.NotEmpty.message=This field cannot be empty
+javax.validation.constraints.NotBlank.message=This field cannot be Blank
+javax.validation.constraints.Positive.message=This field need to be positive
+javax.validation.constraints.Size.message=This field should have size between 9 and 13 characters.

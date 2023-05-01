@@ -1,0 +1,71 @@
+@RestController
+@RequestMapping(value = "/employees")
+@Api(value = "API REST Employee")
+public class EmployeeController {
+
+	private final EmployeeService employeeService;
+
+	public EmployeeController(EmployeeService employeeService) {
+		this.employeeService = employeeService;
+	}
+
+	@GetMapping
+	@ApiOperation("GET EMPLOYEES")
+	public ResponseEntity<List<EmployeeDTO>> getEmployees() {
+
+		List<EmployeeDTO> employeeDTOs = employeeService.getEmployee();
+
+		return ResponseEntity.ok().body(employeeDTOs);
+	}
+
+	@GetMapping("/{id}")
+	@ApiOperation("GET EMPLOYEE DETAILS BY ID")
+	@ApiResponses({ @ApiResponse(code = 200, message = "EMPLOYEE FOUND"),
+			@ApiResponse(code = 404, message = "EMPLOYEE NOT FOUND") })
+	public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable @ApiParam("Employee ID") Long id) {
+
+		EmployeeDTO dto = employeeService.getEmployeeById(id);
+
+		return ResponseEntity.ok().body(dto);
+	}
+
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation("CREATE EMPLOYEE")
+	@ApiResponses({ @ApiResponse(code = 201, message = "EMPLOYEE CREATED"),
+			@ApiResponse(code = 422, message = "VALIDATION ERROR") })
+	public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+
+		EmployeeDTO createdEmployeeDTO = employeeService.postEmployee(employeeDTO);
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(createdEmployeeDTO.getId()).toUri();
+
+		return ResponseEntity.created(location).body(createdEmployeeDTO);
+	}
+
+	@PutMapping("/{id}")
+	@ApiOperation("UPDATE EMPLOYEE BY ID")
+	@ApiResponses({ @ApiResponse(code = 201, message = "EMPLOYEE UPDATED"),
+			@ApiResponse(code = 422, message = "VALIDATION ERROR") })
+	public ResponseEntity<EmployeeDTO> Update(@PathVariable @ApiParam("Employee ID") Long id,
+			@Valid @RequestBody EmployeeDTO employee) {
+
+		employee = employeeService.updateEmployee(id, employee);
+
+		return ResponseEntity.ok().body(employee);
+
+	}
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ApiOperation("DELETE EMPLOYEE BY ID")
+	@ApiResponses({ @ApiResponse(code = 204, message = "EMPLOYEE DELETED"),
+			@ApiResponse(code = 404, message = "EMPLOYEE NOT FOUND") })
+	public ResponseEntity<Void> Delete(@PathVariable @ApiParam("Employee ID") Long id) {
+
+		employeeService.deleteEmployee(id);
+
+		return ResponseEntity.noContent().build();
+	}
+}

@@ -1,0 +1,200 @@
+@SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class EmployeeServiceIntegrationTest {
+
+	@Autowired
+	private EmployeeService service;
+
+	@Autowired
+	EmployeeDatabase employeeRepository;
+	
+	private long nonExistingId;
+	private Employee employee;
+	private Employee newEmployee;
+	private EmployeeDTO employeeDTO;
+	private EmployeeDTO newEmployeeDTO;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		nonExistingId = 123L;
+		employee = EmployeesFactory.createEmployee();
+		newEmployee = EmployeesFactory.createNewEmployee();
+		employeeDTO = EmployeesFactory.createEmployeeDTO();
+		newEmployeeDTO = EmployeesFactory.createNewEmployeeDTO();
+		
+	}
+
+	/*
+	 * //GET Employee 
+	 * 1 - Success when try to get all employee
+	 */
+
+	@Test
+	@DisplayName("getEmployee should return a list of employee DTOs")
+	public void getEmployeeShouldReturnListOfEmployeeDTOs() {
+		// given
+		employeeRepository.saveEmployee(employee);
+		employeeRepository.saveEmployee(newEmployee);
+
+		// when
+		List<EmployeeDTO> result = service.getEmployee();
+
+		// then
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(employee.getPhoneNumber(), result.get(0).getPhoneNumber());
+		assertEquals(newEmployee.getPhoneNumber(), result.get(1).getPhoneNumber());
+	}
+
+	/*
+	 * GET Employee BY ID 
+	 * 1 - Success when try to get existent employee 
+	 * 2 - Error when try to get non-existent employee
+	 * 
+	 */
+
+	@Test
+	@DisplayName("getEmployeeById should return employee by Id")
+	public void getEmployeeShouldReturnEmployeeWhenIdExist() {
+		// given
+		employeeRepository.saveEmployee(employee);
+
+		Long existingId = employee.getId();
+		// when
+		EmployeeDTO result = service.getEmployeeById(existingId);
+		// then
+		assertNotNull(result);
+		assertEquals(employeeRepository.getEmployeeById(existingId).getPhoneNumber(), result.getPhoneNumber());
+
+	}
+
+	@Test
+	@DisplayName("getEmployeeById should throw EmployeeNotFoundException")
+	public void getEmployeeShouldThrowEntityNotFoundWhenIdDoesNotExists() {
+
+
+		assertThrows(EmployeeNotFoundException.class, () -> {
+
+			service.getEmployeeById(nonExistingId);
+
+		});
+
+	}
+
+	/*
+	 * DELETE EMPLOYEE 
+	 * 1 - Error when try to delete non-existent employee 
+	 * 2 - No-Content when try to delete existent employee
+	 */
+
+	@Test
+	@DisplayName("Delete should throw EntityNotFound")
+	public void deleteShouldThrowEntityNotFoundWhenIdDoesNotExists() {
+
+		
+
+		assertThrows(EmployeeNotFoundException.class, () -> {
+
+			service.deleteEmployee(nonExistingId);
+
+		});
+
+	}
+
+	@Test
+	@DisplayName("Delete should throw nothing")
+	public void deleteShouldThrowNothingWhenIdExists() {
+		//given
+		employeeRepository.saveEmployee(employee);
+
+		Long existingId = employee.getId();
+
+		// when
+		service.deleteEmployee(existingId);
+
+		// then
+		assertNull(employeeRepository.getEmployeeById(existingId));
+
+	}
+
+	/*
+	 * CREATE Employee 
+	 * 1 - Success when try to create a valid employee 
+	 * 2 - Should not create when there are null fields
+	 */
+
+	@Test
+	@DisplayName("saveEmployee should create an employee")
+	public void saveEmployeeShouldCreateAnEmployee() {
+
+
+		// when
+		employeeRepository.saveEmployee(employee);
+
+		// then
+		EmployeeDTO result = service.getEmployeeById(employee.getId());
+		assertNotNull(result);
+		assertEquals(employee.getName(), result.getName());
+		assertEquals(employee.getDesignation(), result.getDesignation());
+		assertEquals(employee.getSalary(), result.getSalary());
+		assertEquals(employee.getPhoneNumber(), result.getPhoneNumber());
+		assertEquals(employee.getAddress(), result.getAddress());
+
+	}
+
+	@Test
+	@DisplayName("saveEmployee should not create an employee")
+	public void saveEmployeeShouldNotCreateAnEmployee() {
+
+		Employee employee1 = new Employee(1L, "Igor", "", 1200.00, "123456710", "Atkinson road");
+		employeeRepository.saveEmployee(employee1);
+
+		Long existingId = 1L;
+
+		// Delete the employee
+		service.deleteEmployee(existingId);
+
+		// Verify that the employee has been deleted
+		assertNull(employeeRepository.getEmployeeById(existingId));
+
+	}
+
+	/*
+	 * UPDATE TEACHER 1 - Error when trying to update and teacher does not exist 2 -
+	 * Success when teacher is updated
+	 */
+
+	@Test
+	@DisplayName("updateEmployee should update an employee")
+	public void updateEmployeeShouldUpdateAnEmployee() {
+		// given
+		
+		employeeRepository.saveEmployee(employee);
+
+		// when
+		service.updateEmployee(1L, newEmployeeDTO);
+
+		// then
+		EmployeeDTO result = service.getEmployeeById(employee.getId());
+		assertNotNull(result);
+		assertEquals(newEmployeeDTO.getName(), result.getName());
+		assertEquals(newEmployeeDTO.getDesignation(), result.getDesignation());
+		assertEquals(newEmployeeDTO.getSalary(), result.getSalary());
+		assertEquals(newEmployeeDTO.getPhoneNumber(), result.getPhoneNumber());
+		assertEquals(newEmployeeDTO.getAddress(), result.getAddress());
+	}
+
+	@Test
+	@DisplayName("updateEmployee should not update an employee")
+	public void updateEmployeeShouldNotUpdateAnEmployee() {
+		
+
+		assertThrows(EmployeeNotFoundException.class, () -> {
+
+			service.updateEmployee(nonExistingId, employeeDTO);
+
+		});
+
+	}
+
+}

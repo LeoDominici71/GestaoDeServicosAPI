@@ -3,11 +3,9 @@ package com.leonardo.management.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+
 
 public class Employee implements Serializable {
 

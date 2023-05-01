@@ -1,0 +1,97 @@
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+
+	private static final String EMPLOYEE_NOT_FOUND_MESSAGE = "Employee not found.";
+	private static final String DUPLICATED_EMPLOYEE_MESSAGE = "Employee already exist.";
+
+	private List<Employee> emp = new ArrayList<>();
+
+	private final EmployeeDatabase employeeRepository;
+
+	public EmployeeServiceImpl(EmployeeDatabase employeeRepository) {
+		this.employeeRepository = employeeRepository;
+	}
+
+	@Override
+	public List<EmployeeDTO> getEmployee() {
+		return employeeRepository.getEmployee().values().stream().map(EmployeeDTO::new).collect(Collectors.toList());
+	}
+
+	public EmployeeDTO getEmployeeById(Long id) {
+		return employeeRepository.getEmployee().entrySet().stream().filter(entry -> entry.getKey().equals(id))
+				.map(Map.Entry::getValue).map(EmployeeDTO::new).findFirst()
+				.orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MESSAGE));
+	}
+
+	@Override
+	public EmployeeDTO postEmployee(EmployeeDTO employeeDTO) {
+	    employeeRepository.getEmployee().values().stream()
+	            .filter(f -> f.getPhoneNumber().equals(employeeDTO.getPhoneNumber()))
+	            .findFirst()
+	            .ifPresent(f -> {
+	                throw new DuplicatedEmployeeException(DUPLICATED_EMPLOYEE_MESSAGE);
+	            });
+
+	    Employee employee = createAndSaveEmployeeFromDTO(employeeDTO);
+	    return new EmployeeDTO(employee);
+	}
+
+	
+
+	@Override
+	public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
+
+		Employee entity = employeeRepository.getEmployee().entrySet().stream()
+				.filter(entry -> entry.getKey().equals(id)).map(Map.Entry::getValue).findFirst()
+				.orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_NOT_FOUND_MESSAGE));
+
+		copyDtoToEntity(employeeDTO, entity);
+		employeeRepository.updateEmployee(entity);
+
+		return new EmployeeDTO(entity);
+
+	}
+
+	@Override
+	public void deleteEmployee(Long id) {
+		var employeeExists = getEmployeeById(id);
+		employeeRepository.deleteEmployee(employeeExists.getId());
+	}
+	
+	private Employee createAndSaveEmployeeFromDTO(EmployeeDTO dto) {
+	    Employee employee = new Employee();
+	    copyDtoToEntityForSave(dto, employee);
+	    employeeRepository.saveEmployee(employee);
+	    return employee;
+	}
+
+
+	private void copyDtoToEntity(EmployeeDTO dto, Employee entity) {
+
+		entity.setName(dto.getName());
+		entity.setDesignation(dto.getDesignation());
+		entity.setSalary(dto.getSalary());
+		entity.setPhoneNumber(dto.getPhoneNumber());
+		entity.setAddress(dto.getAddress());
+	}
+
+	private void copyDtoToEntityForSave(EmployeeDTO dto, Employee entity) {
+
+		if (emp.isEmpty()) {
+			entity.setId(1L);
+		} else {
+
+			entity.setId(emp.size() + 1L);
+
+		}
+
+		entity.setName(dto.getName());
+		entity.setDesignation(dto.getDesignation());
+		entity.setSalary(dto.getSalary());
+		entity.setPhoneNumber(dto.getPhoneNumber());
+		entity.setAddress(dto.getAddress());
+
+		emp.add(entity);
+	}
+
+}
