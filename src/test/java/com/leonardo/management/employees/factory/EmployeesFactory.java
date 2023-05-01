@@ -1,9 +1,8 @@
 package com.leonardo.management.employees.factory;
 
+import com.leonardo.management.dto.EmployeeDTO;
 import com.leonardo.management.entities.Employee;
-import com.leonardo.management.entities.dto.EmployeeDTO;
-
-public class EmployeesFactory {
+ public class EmployeesFactory {
 
 	public static EmployeeDTO createEmployeeDTO() {
 		EmployeeDTO employee = new EmployeeDTO(1L, "Igor", "Developer", 1200.00, "13123456789", "Atkinson road");

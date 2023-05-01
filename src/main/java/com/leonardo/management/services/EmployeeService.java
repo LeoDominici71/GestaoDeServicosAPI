@@ -1,11 +1,10 @@
-package com.leonardo.management.service;
+package com.leonardo.management.services;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.leonardo.management.entities.Employee;
-import com.leonardo.management.entities.dto.EmployeeDTO;
+import com.leonardo.management.dto.EmployeeDTO;
 
 @Service
 public interface EmployeeService{

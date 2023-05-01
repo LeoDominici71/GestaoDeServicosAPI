@@ -1,4 +1,4 @@
-package com.leonardo.management.entities.dto;
+package com.leonardo.management.dto;
 
 import java.io.Serializable;
 

@@ -14,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import com.leonardo.management.dto.EmployeeDTO;
 import com.leonardo.management.employees.factory.EmployeesFactory;
 import com.leonardo.management.entities.Employee;
-import com.leonardo.management.entities.dto.EmployeeDTO;
 import com.leonardo.management.repositories.EmployeeDatabase;
-import com.leonardo.management.service.EmployeeService;
 import com.leonardo.management.service.exceptions.EmployeeNotFoundException;
+import com.leonardo.management.services.EmployeeService;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)

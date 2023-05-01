@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.leonardo.management.dto.EmployeeDTO;
 import com.leonardo.management.entities.Employee;
-import com.leonardo.management.entities.dto.EmployeeDTO;
 import com.leonardo.management.repositories.EmployeeDatabase;
-import com.leonardo.management.service.EmployeeService;
 import com.leonardo.management.service.exceptions.DuplicatedEmployeeException;
 import com.leonardo.management.service.exceptions.EmployeeNotFoundException;
+import com.leonardo.management.services.EmployeeService;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {

@@ -1,0 +1,144 @@
+swagger: "2.0"
+info:
+  description: API for employee management
+  version: "1.0"
+  title: Employee management API
+host: localhost:8080
+basePath: /
+tags:
+  - name: employee-controller
+    description: Employee Controller
+paths:
+  /employees:
+    get:
+      tags:
+        - employee-controller
+      summary: GET EMPLOYEES
+      operationId: getEmployeesUsingGET
+      produces:
+        - "*/*"
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/EmployeeDTO"
+      deprecated: false
+    post:
+      tags:
+        - employee-controller
+      summary: CREATE EMPLOYEE
+      operationId: createEmployeeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - "*/*"
+      parameters:
+        - in: body
+          name: employeeDTO
+          description: employeeDTO
+          required: true
+          schema:
+            $ref: "#/definitions/EmployeeDTO"
+      responses:
+        "201":
+          description: EMPLOYEE CREATED
+          schema:
+            $ref: "#/definitions/EmployeeDTO"
+        "422":
+          description: VALIDATION ERROR
+      deprecated: false
+  /employees/{id}:
+    get:
+      tags:
+        - employee-controller
+      summary: GET EMPLOYEE DETAILS BY ID
+      operationId: getEmployeeByIdUsingGET
+      produces:
+        - "*/*"
+      parameters:
+        - name: id
+          in: path
+          description: Employee ID
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: EMPLOYEE FOUND
+          schema:
+            $ref: "#/definitions/EmployeeDTO"
+        "404":
+          description: EMPLOYEE NOT FOUND
+      deprecated: false
+    put:
+      tags:
+        - employee-controller
+      summary: UPDATE EMPLOYEE BY ID
+      operationId: UpdateUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - "*/*"
+      parameters:
+        - in: body
+          name: employee
+          description: employee
+          required: true
+          schema:
+            $ref: "#/definitions/EmployeeDTO"
+        - name: id
+          in: path
+          description: Employee ID
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/EmployeeDTO"
+        "201":
+          description: EMPLOYEE UPDATED
+          schema:
+            $ref: "#/definitions/EmployeeDTO"
+        "422":
+          description: VALIDATION ERROR
+      deprecated: false
+    delete:
+      tags:
+        - employee-controller
+      summary: DELETE EMPLOYEE BY ID
+      operationId: DeleteUsingDELETE
+      produces:
+        - "*/*"
+      parameters:
+        - name: id
+          in: path
+          description: Employee ID
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "204":
+          description: EMPLOYEE DELETED
+        "404":
+          description: EMPLOYEE NOT FOUND
+      deprecated: false
+definitions:
+  EmployeeDTO:
+    type: object
+    properties:
+      address:
+        type: string
+      designation:
+        type: string
+      name:
+        type: string
+      phoneNumber:
+        type: string
+      salary:
+        type: number
+        format: double
+    title: EmployeeDTO

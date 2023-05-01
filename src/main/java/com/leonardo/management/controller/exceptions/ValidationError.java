@@ -3,8 +3,6 @@ package com.leonardo.management.controller.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.leonardo.management.service.exceptions.StandardError;
-
 public class ValidationError extends StandardError {
 
 	private static final long serialVersionUID = 1L;

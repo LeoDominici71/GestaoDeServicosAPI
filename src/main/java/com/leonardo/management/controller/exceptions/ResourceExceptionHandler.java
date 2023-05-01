@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.leonardo.management.service.exceptions.DuplicatedEmployeeException;
 import com.leonardo.management.service.exceptions.EmployeeNotFoundException;
-import com.leonardo.management.service.exceptions.NullFieldsException;
-import com.leonardo.management.service.exceptions.StandardError;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {

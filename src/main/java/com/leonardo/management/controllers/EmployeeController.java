@@ -1,4 +1,4 @@
-package com.leonardo.management.controller;
+package com.leonardo.management.controllers;
 
 import java.net.URI;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.leonardo.management.entities.dto.EmployeeDTO;
-import com.leonardo.management.service.EmployeeService;
+import com.leonardo.management.dto.EmployeeDTO;
+import com.leonardo.management.services.EmployeeService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
