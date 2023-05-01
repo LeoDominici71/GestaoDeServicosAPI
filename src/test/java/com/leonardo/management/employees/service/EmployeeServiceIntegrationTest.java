@@ -7,12 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import com.leonardo.management.employees.factory.EmployeesFactory;
 import com.leonardo.management.entities.Employee;
 import com.leonardo.management.entities.dto.EmployeeDTO;
 import com.leonardo.management.repositories.EmployeeDatabase;
@@ -21,26 +23,41 @@ import com.leonardo.management.service.exceptions.EmployeeNotFoundException;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class EmployeeIntegrationTest {
+public class EmployeeServiceIntegrationTest {
 
 	@Autowired
 	private EmployeeService service;
 
 	@Autowired
 	EmployeeDatabase employeeRepository;
+	
+	private long nonExistingId;
+	private Employee employee;
+	private Employee newEmployee;
+	private EmployeeDTO employeeDTO;
+	private EmployeeDTO newEmployeeDTO;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		nonExistingId = 123L;
+		employee = EmployeesFactory.createEmployee();
+		newEmployee = EmployeesFactory.createNewEmployee();
+		employeeDTO = EmployeesFactory.createEmployeeDTO();
+		newEmployeeDTO = EmployeesFactory.createNewEmployeeDTO();
+		
+	}
 
 	/*
-	 * //GET Employee // 1 - Success when try to get all employee
+	 * //GET Employee 
+	 * 1 - Success when try to get all employee
 	 */
 
 	@Test
 	@DisplayName("getEmployee should return a list of employee DTOs")
 	public void getEmployeeShouldReturnListOfEmployeeDTOs() {
 		// given
-		Employee employee1 = new Employee(1L, "John Doe", "Developer", 1200.00, "123456710", "Atkinson road");
-		Employee employee2 = new Employee(2L, "Jane Doe", "Designer", 1500.00, "123456711", "Broadway");
-		employeeRepository.saveEmployee(employee1);
-		employeeRepository.saveEmployee(employee2);
+		employeeRepository.saveEmployee(employee);
+		employeeRepository.saveEmployee(newEmployee);
 
 		// when
 		List<EmployeeDTO> result = service.getEmployee();
@@ -48,13 +65,14 @@ public class EmployeeIntegrationTest {
 		// then
 		assertNotNull(result);
 		assertEquals(2, result.size());
-		assertEquals(employee1.getPhoneNumber(), result.get(0).getPhoneNumber());
-		assertEquals(employee2.getPhoneNumber(), result.get(1).getPhoneNumber());
+		assertEquals(employee.getPhoneNumber(), result.get(0).getPhoneNumber());
+		assertEquals(newEmployee.getPhoneNumber(), result.get(1).getPhoneNumber());
 	}
 
 	/*
-	 * GET Employee BY ID 1 - Success when try to get existent employee 2 - Error
-	 * when try to get non-existent employee
+	 * GET Employee BY ID 
+	 * 1 - Success when try to get existent employee 
+	 * 2 - Error when try to get non-existent employee
 	 * 
 	 */
 
@@ -62,10 +80,9 @@ public class EmployeeIntegrationTest {
 	@DisplayName("getEmployeeById should return employee by Id")
 	public void getEmployeeShouldReturnEmployeeWhenIdExist() {
 		// given
-		Employee employee1 = new Employee(1L, "Igor", "Developer", 1200.00, "123456710", "Atkinson road");
-		employeeRepository.saveEmployee(employee1);
+		employeeRepository.saveEmployee(employee);
 
-		Long existingId = 1L;
+		Long existingId = employee.getId();
 		// when
 		EmployeeDTO result = service.getEmployeeById(existingId);
 		// then
@@ -78,7 +95,6 @@ public class EmployeeIntegrationTest {
 	@DisplayName("getEmployeeById should throw EmployeeNotFoundException")
 	public void getEmployeeShouldThrowEntityNotFoundWhenIdDoesNotExists() {
 
-		Long nonExistingId = 99L;
 
 		assertThrows(EmployeeNotFoundException.class, () -> {
 
@@ -89,15 +105,16 @@ public class EmployeeIntegrationTest {
 	}
 
 	/*
-	 * DELETE EMPLOYEE 1 - Error when try to delete non-existent employee 2 -
-	 * No-Content when try to delete existent employee
+	 * DELETE EMPLOYEE 
+	 * 1 - Error when try to delete non-existent employee 
+	 * 2 - No-Content when try to delete existent employee
 	 */
 
 	@Test
 	@DisplayName("Delete should throw EntityNotFound")
 	public void deleteShouldThrowEntityNotFoundWhenIdDoesNotExists() {
 
-		Long nonExistingId = 99L;
+		
 
 		assertThrows(EmployeeNotFoundException.class, () -> {
 
@@ -108,44 +125,43 @@ public class EmployeeIntegrationTest {
 	}
 
 	@Test
-	@DisplayName("Delete should throw ")
+	@DisplayName("Delete should throw nothing")
 	public void deleteShouldThrowNothingWhenIdExists() {
-		Employee employee1 = new Employee(1L, "Igor", "Developer", 1200.00, "123456710", "Atkinson road");
-		employeeRepository.saveEmployee(employee1);
+		//given
+		employeeRepository.saveEmployee(employee);
 
-		Long existingId = 1L;
+		Long existingId = employee.getId();
 
-		// Delete the employee
+		// when
 		service.deleteEmployee(existingId);
 
-		// Verify that the employee has been deleted
+		// then
 		assertNull(employeeRepository.getEmployeeById(existingId));
 
 	}
 
 	/*
-	 * CREATE Employee 1 - Success when try to create a valid employee 2 - Should
-	 * not create when there are null fields
+	 * CREATE Employee 
+	 * 1 - Success when try to create a valid employee 
+	 * 2 - Should not create when there are null fields
 	 */
 
 	@Test
 	@DisplayName("saveEmployee should create an employee")
 	public void saveEmployeeShouldCreateAnEmployee() {
 
-		// given
-		Employee employee1 = new Employee(1L, "Osvaldo", "Developer", 1200.00, "123456710", "Atkinson road");
 
 		// when
-		employeeRepository.saveEmployee(employee1);
+		employeeRepository.saveEmployee(employee);
 
 		// then
-		EmployeeDTO result = service.getEmployeeById(employee1.getId());
+		EmployeeDTO result = service.getEmployeeById(employee.getId());
 		assertNotNull(result);
-		assertEquals(employee1.getName(), result.getName());
-		assertEquals(employee1.getDesignation(), result.getDesignation());
-		assertEquals(employee1.getSalary(), result.getSalary());
-		assertEquals(employee1.getPhoneNumber(), result.getPhoneNumber());
-		assertEquals(employee1.getAddress(), result.getAddress());
+		assertEquals(employee.getName(), result.getName());
+		assertEquals(employee.getDesignation(), result.getDesignation());
+		assertEquals(employee.getSalary(), result.getSalary());
+		assertEquals(employee.getPhoneNumber(), result.getPhoneNumber());
+		assertEquals(employee.getAddress(), result.getAddress());
 
 	}
 
@@ -175,33 +191,30 @@ public class EmployeeIntegrationTest {
 	@DisplayName("updateEmployee should update an employee")
 	public void updateEmployeeShouldUpdateAnEmployee() {
 		// given
-		Employee employee1 = new Employee(1L, "Osvaldo", "Developer", 1200.00, "123456710", "Atkinson road");
-		EmployeeDTO newEmployee1 = new EmployeeDTO(1L, "Osvaldo da Silva", "Developer", 1200.00, "123456710",
-				"Atkinson road");
-		employeeRepository.saveEmployee(employee1);
+		
+		employeeRepository.saveEmployee(employee);
 
 		// when
-		service.updateEmployee(1L, newEmployee1);
+		service.updateEmployee(1L, newEmployeeDTO);
 
 		// then
-		EmployeeDTO result = service.getEmployeeById(employee1.getId());
+		EmployeeDTO result = service.getEmployeeById(employee.getId());
 		assertNotNull(result);
-		assertEquals(newEmployee1.getName(), result.getName());
-		assertEquals(newEmployee1.getDesignation(), result.getDesignation());
-		assertEquals(newEmployee1.getSalary(), result.getSalary());
-		assertEquals(newEmployee1.getPhoneNumber(), result.getPhoneNumber());
-		assertEquals(newEmployee1.getAddress(), result.getAddress());
+		assertEquals(newEmployeeDTO.getName(), result.getName());
+		assertEquals(newEmployeeDTO.getDesignation(), result.getDesignation());
+		assertEquals(newEmployeeDTO.getSalary(), result.getSalary());
+		assertEquals(newEmployeeDTO.getPhoneNumber(), result.getPhoneNumber());
+		assertEquals(newEmployeeDTO.getAddress(), result.getAddress());
 	}
 
 	@Test
 	@DisplayName("updateEmployee should not update an employee")
 	public void updateEmployeeShouldNotUpdateAnEmployee() {
-		EmployeeDTO employee1 = new EmployeeDTO(1L, "Osvaldo", "Developer", 1200.00, "123456710", "Atkinson road");
-		Long nonExistingId = 99L;
+		
 
 		assertThrows(EmployeeNotFoundException.class, () -> {
 
-			service.updateEmployee(nonExistingId, employee1);
+			service.updateEmployee(nonExistingId, employeeDTO);
 
 		});
 

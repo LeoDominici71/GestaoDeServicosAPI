@@ -8,43 +8,47 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leonardo.management.entities.Employee;
+
+import io.swagger.annotations.ApiModelProperty;
 
 public class EmployeeDTO implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	@JsonIgnore
+
+	@ApiModelProperty(hidden = true)
 	private Long id;
+
 	@NotBlank
 	private String name;
+
 	@NotBlank
 	private String designation;
+
 	@Positive
 	@NotNull
 	private Double salary;
+
 	@Size(min = 9, max = 13)
 	@NotBlank
 	private String phoneNumber;
+
 	@NotBlank
 	private String address;
 
 	public EmployeeDTO() {
 		// TODO Auto-generated constructor stub
 	}
-	
-public EmployeeDTO(Employee entity) {
-		
+
+	public EmployeeDTO(Employee entity) {
+
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.designation = entity.getDesignation();
 		this.salary = entity.getSalary();
 		this.phoneNumber = entity.getPhoneNumber();
 		this.address = entity.getAddress();
-		
+
 	}
 
 	public EmployeeDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String designation, @NotNull Double salary,

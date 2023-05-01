@@ -19,33 +19,30 @@ public class EmployeeDatabaseImpl implements EmployeeDatabase {
 	}
 
 	@Override
-	public Map<Long, Employee>  getEmployee() {
+	public Map<Long, Employee> getEmployee() {
 		return employees;
 	}
-	
+
 	@Override
 	public Employee getEmployeeById(Long id) {
-	    return getEmployee().get(id);
+		return getEmployee().get(id);
 	}
 
 	@Override
 	public Employee saveEmployee(Employee employee) {
 		return employees.put(employee.getId(), employee);
-		
+
 	}
 
 	@Override
 	public void updateEmployee(Employee employee) {
 		employees.put(employee.getId(), employee);
-		
-	}
-	
-	 @Override
-	    public void deleteEmployee(Long id) {
-	        employees.remove(id);
-	    }
 
-	
-	
+	}
+
+	@Override
+	public void deleteEmployee(Long id) {
+		employees.remove(id);
+	}
 
 }

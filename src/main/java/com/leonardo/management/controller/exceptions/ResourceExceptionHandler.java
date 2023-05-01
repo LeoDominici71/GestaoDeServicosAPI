@@ -50,7 +50,7 @@ public class ResourceExceptionHandler {
 		err.setTimestamp(Instant.now());
 		err.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
 		err.setError("Validation exception.");
-		err.setMessage(e.getMessage());
+		err.setMessage("Invalid data. Please check the fields and try again.");
 		err.setPath(request.getRequestURI());
 
 		for (FieldError f : e.getBindingResult().getFieldErrors()) {

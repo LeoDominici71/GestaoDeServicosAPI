@@ -23,9 +23,13 @@ import com.leonardo.management.service.EmployeeService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(value = "/employees")
+@Api(value = "API REST Employee")
 public class EmployeeController {
 
 	private final EmployeeService employeeService;
@@ -37,31 +41,47 @@ public class EmployeeController {
 	@GetMapping
 	@ApiOperation("GET EMPLOYEES")
 	public ResponseEntity<List<EmployeeDTO>> getEmployees() {
+
 		List<EmployeeDTO> employeeDTOs = employeeService.getEmployee();
-		return ResponseEntity.ok(employeeDTOs);
+
+		return ResponseEntity.ok().body(employeeDTOs);
 	}
 
 	@GetMapping("/{id}")
 	@ApiOperation("GET EMPLOYEE DETAILS BY ID")
-	public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
+	@ApiResponses({ @ApiResponse(code = 200, message = "EMPLOYEE FOUND"),
+			@ApiResponse(code = 404, message = "EMPLOYEE NOT FOUND") })
+	public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable @ApiParam("Employee ID") Long id) {
+
 		EmployeeDTO dto = employeeService.getEmployeeById(id);
+
 		return ResponseEntity.ok().body(dto);
 	}
 
 	@PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation("CREATE EMPLOYEE")
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation("CREATE EMPLOYEE")
+	@ApiResponses({ @ApiResponse(code = 201, message = "EMPLOYEE CREATED"),
+			@ApiResponse(code = 422, message = "VALIDATION ERROR") })
 	public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+
 		EmployeeDTO createdEmployeeDTO = employeeService.postEmployee(employeeDTO);
+
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(createdEmployeeDTO.getId()).toUri();
+
 		return ResponseEntity.created(location).body(createdEmployeeDTO);
 	}
 
 	@PutMapping("/{id}")
 	@ApiOperation("UPDATE EMPLOYEE BY ID")
-	public ResponseEntity<EmployeeDTO> Update(@PathVariable Long id, @Valid @RequestBody EmployeeDTO employee) {
+	@ApiResponses({ @ApiResponse(code = 201, message = "EMPLOYEE UPDATED"),
+			@ApiResponse(code = 422, message = "VALIDATION ERROR") })
+	public ResponseEntity<EmployeeDTO> Update(@PathVariable @ApiParam("Employee ID") Long id,
+			@Valid @RequestBody EmployeeDTO employee) {
+
 		employee = employeeService.updateEmployee(id, employee);
+
 		return ResponseEntity.ok().body(employee);
 
 	}
@@ -69,8 +89,12 @@ public class EmployeeController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ApiOperation("DELETE EMPLOYEE BY ID")
-	public ResponseEntity<Void> Delete(@PathVariable Long id) {
+	@ApiResponses({ @ApiResponse(code = 204, message = "EMPLOYEE DELETED"),
+			@ApiResponse(code = 404, message = "EMPLOYEE NOT FOUND") })
+	public ResponseEntity<Void> Delete(@PathVariable @ApiParam("Employee ID") Long id) {
+
 		employeeService.deleteEmployee(id);
+
 		return ResponseEntity.noContent().build();
 	}
 }

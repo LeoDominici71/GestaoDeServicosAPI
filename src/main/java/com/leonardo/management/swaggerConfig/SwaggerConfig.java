@@ -18,7 +18,7 @@ public class SwaggerConfig {
 	@Bean
 	public Docket docket() {
 		return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false).select()
-				.apis(RequestHandlerSelectors.basePackage("com.leonardo.management.controller"))
+				.apis(RequestHandlerSelectors.basePackage("com.leonardo.management"))
 				.paths(PathSelectors.any()).build().apiInfo(apiInfo());
 	}
 
